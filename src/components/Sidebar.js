@@ -4,11 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthGuard";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const [profileName, setProfileName] = useState("Kojo Mensah");
   const [accountType, setAccountType] = useState("Admin Account");
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     async function loadProfile() {
@@ -64,22 +66,31 @@ export default function Sidebar() {
             );
           })}
         </nav>
-        <div className="mt-auto px-6 flex items-center gap-3 border-t border-outline-variant/20 pt-6">
-          <div className="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-primary/30 shrink-0">
-            <img
-              alt="Easzy OS User Profile"
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYBWL40vXfc9b7qNi1bXPz9jyoN641B_ihwQXqHXDVNTk5iAHYuHhcoeBBb010huZiDy2cBPd5LMBO2iz5W-58Mv0EstSqn-nLbWp3GmBCKUmDBOlX7fQ3NnD2--Sg8BRpMKfur4s8vDsmN7peubphUVd25-CZ58kPQpNwXLUJyc7Xd6SbrjmESKhf1DRXnCMi1Eym8tbcEtR3wrE9cuqfFZcmvQCM-bWRAoOi1iW9Rb1JGVNMNFIVbHLi9Z1ro_YjCxEs6RYmdImq"
-            />
+        <div className="mt-auto px-6 flex items-center justify-between gap-2 border-t border-outline-variant/20 pt-6">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-primary/30 shrink-0">
+              <img
+                alt="Easzy OS User Profile"
+                className="w-full h-full object-cover"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYBWL40vXfc9b7qNi1bXPz9jyoN641B_ihwQXqHXDVNTk5iAHYuHhcoeBBb010huZiDy2cBPd5LMBO2iz5W-58Mv0EstSqn-nLbWp3GmBCKUmDBOlX7fQ3NnD2--Sg8BRpMKfur4s8vDsmN7peubphUVd25-CZ58kPQpNwXLUJyc7Xd6SbrjmESKhf1DRXnCMi1Eym8tbcEtR3wrE9cuqfFZcmvQCM-bWRAoOi1iW9Rb1JGVNMNFIVbHLi9Z1ro_YjCxEs6RYmdImq"
+              />
+            </div>
+            <div className="flex flex-col overflow-hidden">
+              <span className="text-label-md font-label-md text-surface-bright truncate">
+                {user ? user.username : profileName}
+              </span>
+              <span className="text-[10px] font-label-sm text-primary uppercase tracking-wider truncate">
+                {accountType}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-label-md font-label-md text-surface-bright truncate">
-              {profileName}
-            </span>
-            <span className="text-[10px] font-label-sm text-primary uppercase tracking-wider truncate">
-              {accountType}
-            </span>
-          </div>
+          <button 
+            onClick={logout}
+            className="p-1.5 text-secondary hover:text-error hover:bg-error/10 rounded-lg transition-colors flex shrink-0" 
+            title="Log Out of Workspace"
+          >
+            <span className="material-symbols-outlined text-[20px]">logout</span>
+          </button>
         </div>
       </aside>
 

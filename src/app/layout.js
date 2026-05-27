@@ -22,8 +22,7 @@ export const metadata = {
   description: "Personal AI-Powered Content System",
 };
 
-import Sidebar from "@/components/Sidebar";
-import Header from "@/components/Header";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function RootLayout({ children }) {
   return (
@@ -56,9 +55,9 @@ export default function RootLayout({ children }) {
             },
           }}
         />
-        <Sidebar />
-        <Header />
-        {children}
+        <AuthGuard>
+          {children}
+        </AuthGuard>
       </body>
     </html>
   );

@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import toast from "react-hot-toast";
 
 export default function SettingsPage() {
-  const [activeTab, setActiveTab] = useState("core"); // 'core', 'voice', 'training', 'engine'
+  const [activeTab, setActiveTab] = useState("core"); // 'core', 'voice', 'training', 'engine', 'security'
   
   // Personas State
   const [profiles, setProfiles] = useState([]);
@@ -14,6 +14,74 @@ export default function SettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [isExtracting, setIsExtracting] = useState(false);
   const [dbError, setDbError] = useState(null);
+
+  // Security Credentials States
+  const [securityUsername, setSecurityUsername] = useState("");
+  const [securityPassword, setSecurityPassword] = useState("");
+  const [securityConfirmPassword, setSecurityConfirmPassword] = useState("");
+
+  // Load security credentials when tab changes
+  useEffect(() => {
+    async function loadSecurityCredentials() {
+      if (activeTab !== "security") return;
+      const session = localStorage.getItem("easzy_os_user");
+      if (session) {
+        try {
+          const parsed = JSON.parse(session);
+          const { data, error } = await supabase
+            .from("users")
+            .select("*")
+            .eq("id", parsed.id)
+            .single();
+            
+          if (data) {
+            setSecurityUsername(data.username);
+            setSecurityPassword(data.password);
+            setSecurityConfirmPassword(data.password);
+          }
+        } catch (err) {
+          console.error("Error loading credentials:", err);
+        }
+      }
+    }
+    loadSecurityCredentials();
+  }, [activeTab]);
+
+  const handleSaveSecurity = async () => {
+    if (!securityUsername.trim() || !securityPassword.trim()) {
+      toast.error("Please fill in all security fields.");
+      return;
+    }
+    if (securityPassword !== securityConfirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const session = localStorage.getItem("easzy_os_user");
+      if (!session) throw new Error("No active user session found.");
+      const parsed = JSON.parse(session);
+      
+      const { error } = await supabase
+        .from("users")
+        .update({
+          username: securityUsername.trim(),
+          password: securityPassword.trim()
+        })
+         .eq("id", parsed.id);
+         
+      if (error) throw error;
+      
+      localStorage.setItem("easzy_os_user", JSON.stringify({ id: parsed.id, username: securityUsername.trim() }));
+      toast.success("Security credentials updated successfully!");
+    } catch (err) {
+      console.error("Save credentials error", err);
+      toast.error("Failed to update credentials: " + err.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Form State
   const [formData, setFormData] = useState({
@@ -497,6 +565,7 @@ ADD COLUMN IF NOT EXISTS training_data JSONB NOT NULL DEFAULT '[]'::jsonb;`}
             { id: 'voice', label: 'Voice Dynamics', icon: 'equalizer' },
             { id: 'training', label: 'Training Data', icon: 'model_training' },
             { id: 'engine', label: 'Deep Engine Config', icon: 'settings_suggest' },
+            { id: 'security', label: 'Security & Access', icon: 'security' },
           ].map(tab => (
             <button
               key={tab.id}
@@ -785,6 +854,74 @@ ADD COLUMN IF NOT EXISTS training_data JSONB NOT NULL DEFAULT '[]'::jsonb;`}
                      className="w-full p-3 rounded-lg bg-surface-main border border-border-subtle text-on-surface outline-none focus:border-primary transition-colors font-jetbrains-mono text-[13px]" 
                    />
                  </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: SECURITY & ACCESS */}
+          {activeTab === 'security' && (
+            <div className="max-w-2xl space-y-8 animate-fade-in">
+              <div>
+                <h4 className="font-headline-md text-[18px] text-on-surface mb-2 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary">security</span>
+                  Workspace Credentials Security
+                </h4>
+                <p className="text-body-sm text-secondary">Update your workspace credentials here. Once saved, these will be used to log in on subsequent browser sessions.</p>
+              </div>
+
+              <div className="bg-surface-subtle border border-border-subtle p-6 rounded-xl space-y-6">
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Workspace Username</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">person</span>
+                    <input 
+                      type="text" 
+                      value={securityUsername}
+                      onChange={(e) => setSecurityUsername(e.target.value)}
+                      placeholder="e.g. admin"
+                      className="w-full pl-11 pr-4 py-3 bg-surface-main border border-border-subtle text-on-surface text-body-sm rounded-xl outline-none focus:border-primary transition-all placeholder:text-secondary/50 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">New Secret Password</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">lock</span>
+                    <input 
+                      type="password" 
+                      value={securityPassword}
+                      onChange={(e) => setSecurityPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full pl-11 pr-4 py-3 bg-surface-main border border-border-subtle text-on-surface text-body-sm rounded-xl outline-none focus:border-primary transition-all placeholder:text-secondary/50 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 text-left">
+                  <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Confirm Secret Password</label>
+                  <div className="relative">
+                    <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">lock_reset</span>
+                    <input 
+                      type="password" 
+                      value={securityConfirmPassword}
+                      onChange={(e) => setSecurityConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                      className="w-full pl-11 pr-4 py-3 bg-surface-main border border-border-subtle text-on-surface text-body-sm rounded-xl outline-none focus:border-primary transition-all placeholder:text-secondary/50 font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <button 
+                    onClick={handleSaveSecurity}
+                    disabled={isSaving}
+                    className="px-6 py-3 bg-primary text-on-primary font-label-sm font-bold rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center gap-2 shadow-sm disabled:opacity-50"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">save</span>
+                    Update Security Credentials
+                  </button>
+                </div>
               </div>
             </div>
           )}

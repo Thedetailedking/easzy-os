@@ -101,3 +101,14 @@ ALTER TABLE public.marketing_campaigns ENABLE ROW LEVEL SECURITY;
 -- Policy for anon access in development
 CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR ALL USING (true);
 
+-- 6. Credentials Users Table (For Simple Login)
+CREATE TABLE public.users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  username TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS and add anonymous policy for development sandbox
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all operations for anon" ON public.users FOR ALL USING (true);
