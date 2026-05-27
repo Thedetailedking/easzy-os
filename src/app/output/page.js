@@ -190,7 +190,6 @@ Provide exactly 3 scroll-stopping hook options at the very top of your output (O
           systemContext: personaContext,
           provider: llmProvider,
           model: llmModel,
-          apiKey: llmApiKey
         }),
       });
       const data = await response.json();

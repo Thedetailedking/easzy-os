@@ -90,7 +90,6 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
               systemContext: personaContext,
               provider: llmProvider,
               model: llmModel,
-              apiKey: llmApiKey
             }),
           });
           const data = await response.json();
@@ -170,7 +169,6 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
           systemContext: personaContext,
           provider: llmProvider,
           model: llmModel,
-          apiKey: llmApiKey
         }),
       });
       const data = await response.json();

@@ -372,7 +372,6 @@ Who it's for (Audience): ${audience || "Not filled"}
           systemContext: personaContext,
           provider: llmProvider,
           model: llmModel,
-          apiKey: llmApiKey,
           commandType: commandType
         })
       });
@@ -496,7 +495,6 @@ Ensure sequence array has exactly 4 items. Do not include markdown code fence fo
           systemContext: "You are a backend JSON generator. Return ONLY valid raw JSON.",
           provider: llmProvider,
           model: llmModel,
-          apiKey: llmApiKey,
           commandType: "launch_sequence"
         })
       });

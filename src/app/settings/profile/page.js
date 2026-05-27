@@ -20,60 +20,58 @@ export default function SettingsPage() {
   const [securityPassword, setSecurityPassword] = useState("");
   const [securityConfirmPassword, setSecurityConfirmPassword] = useState("");
 
-  // Load security credentials when tab changes
+  // Load username (but NOT password) when the security tab is opened.
+  // Passwords are never fetched from the server — the user must re-enter to change.
   useEffect(() => {
-    async function loadSecurityCredentials() {
+    async function loadSecurityUsername() {
       if (activeTab !== "security") return;
-      const session = localStorage.getItem("easzy_os_user");
-      if (session) {
-        try {
-          const parsed = JSON.parse(session);
-          const { data, error } = await supabase
-            .from("users")
-            .select("*")
-            .eq("id", parsed.id)
-            .single();
-            
-          if (data) {
-            setSecurityUsername(data.username);
-            setSecurityPassword(data.password);
-            setSecurityConfirmPassword(data.password);
-          }
-        } catch (err) {
-          console.error("Error loading credentials:", err);
+      try {
+        const res = await fetch("/api/auth/session", { credentials: "include" });
+        const data = await res.json();
+        if (data.user?.username) {
+          setSecurityUsername(data.user.username);
         }
+      } catch (err) {
+        console.error("Error loading session:", err);
       }
     }
-    loadSecurityCredentials();
+    loadSecurityUsername();
   }, [activeTab]);
 
   const handleSaveSecurity = async () => {
     if (!securityUsername.trim() || !securityPassword.trim()) {
-      toast.error("Please fill in all security fields.");
+      toast.error("Please fill in both username and new password.");
       return;
     }
     if (securityPassword !== securityConfirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
-    
+    if (securityPassword.trim().length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
+
     setIsSaving(true);
     try {
-      const session = localStorage.getItem("easzy_os_user");
-      if (!session) throw new Error("No active user session found.");
-      const parsed = JSON.parse(session);
-      
-      const { error } = await supabase
-        .from("users")
-        .update({
+      // POST to the server-side credentials route.
+      // The user ID comes from the verified session cookie — never from the client.
+      // The server hashes the password with bcrypt before storing.
+      const res = await fetch("/api/auth/credentials", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
           username: securityUsername.trim(),
-          password: securityPassword.trim()
-        })
-         .eq("id", parsed.id);
-         
-      if (error) throw error;
-      
-      localStorage.setItem("easzy_os_user", JSON.stringify({ id: parsed.id, username: securityUsername.trim() }));
+          password: securityPassword.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Update failed.");
+
+      // Clear the password fields after a successful save
+      setSecurityPassword("");
+      setSecurityConfirmPassword("");
       toast.success("Security credentials updated successfully!");
     } catch (err) {
       console.error("Save credentials error", err);
@@ -358,7 +356,6 @@ export default function SettingsPage() {
             systemContext: "Reverse-engineer tone sliders.",
             provider: llmProvider,
             model: llmModel,
-            apiKey: llmApiKey,
             commandType: "style_calibrator"
           })
         });

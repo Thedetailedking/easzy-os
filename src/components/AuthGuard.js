@@ -7,7 +7,6 @@ import Header from "@/components/Header";
 
 const AuthContext = createContext({
   user: null,
-  login: () => {},
   logout: () => {},
 });
 
@@ -19,38 +18,28 @@ export default function AuthGuard({ children }) {
   const router = useRouter();
   const pathname = usePathname();
 
+  // Check the server-side session on every navigation
   useEffect(() => {
-    const session = localStorage.getItem("easzy_os_user");
-    if (session) {
+    async function checkSession() {
       try {
-        const parsed = JSON.parse(session);
-        setUser(parsed);
-      } catch (err) {
-        console.error("Session parse error", err);
-        localStorage.removeItem("easzy_os_user");
+        const res = await fetch("/api/auth/session", { credentials: "include" });
+        const data = await res.json();
+        setUser(data.user || null);
+      } catch {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
     }
-    setIsLoading(false);
-  }, []);
+    checkSession();
+  }, [pathname]);
 
-  useEffect(() => {
-    if (isLoading) return;
-
-    const isLoginPage = pathname === "/login";
-    if (!user && !isLoginPage) {
-      router.push("/login");
-    } else if (user && isLoginPage) {
-      router.push("/");
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+    } catch {
+      // Best-effort logout
     }
-  }, [user, pathname, isLoading, router]);
-
-  const login = (userData) => {
-    localStorage.setItem("easzy_os_user", JSON.stringify(userData));
-    setUser(userData);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("easzy_os_user");
     setUser(null);
     router.push("/login");
   };
@@ -68,15 +57,15 @@ export default function AuthGuard({ children }) {
 
   if (isLoginPage) {
     return (
-      <AuthContext.Provider value={{ user, login, logout }}>
+      <AuthContext.Provider value={{ user, logout }}>
         {children}
       </AuthContext.Provider>
     );
   }
 
-  // If we are logged in, we render the standard desktop layout with Sidebar & Header
+  // If we are logged in, render the standard desktop layout with Sidebar & Header
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, logout }}>
       {user ? (
         <>
           <Sidebar />

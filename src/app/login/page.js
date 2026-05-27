@@ -1,45 +1,37 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/components/AuthGuard";
-import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const router = useRouter();
   const [isSetupMode, setIsSetupMode] = useState(false);
   const [checkingDb, setCheckingDb] = useState(true);
   const [loading, setLoading] = useState(false);
-  
+
   // Form states
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Check if any users exist in the database on mount
+  // Ask the server whether setup is needed (avoids exposing user count via Supabase anon key)
   useEffect(() => {
-    async function checkExistingUsers() {
+    async function checkSetupNeeded() {
       try {
-        const { data, error, count } = await supabase
-          .from("users")
-          .select("id", { count: "exact", head: true });
-          
-        if (error) {
-          // If the table doesn't exist yet, we will fallback to standard login/setup mode gracefully
-          console.warn("Users table select error (likely missing database migration):", error);
-          setIsSetupMode(true);
-        } else if (count === 0) {
+        const res = await fetch("/api/auth/setup");
+        const data = await res.json();
+        if (data.needsSetup) {
           setIsSetupMode(true);
           toast("Welcome! Set up your Master Administrator Account to begin.", { icon: "👋" });
         }
-      } catch (err) {
-        console.error("Database check failed:", err);
-        setIsSetupMode(true);
+      } catch {
+        // If the check fails, default to login mode
       } finally {
         setCheckingDb(false);
       }
     }
-    checkExistingUsers();
+    checkSetupNeeded();
   }, []);
 
   const handleLogin = async (e) => {
@@ -51,21 +43,21 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("username", username.trim())
-        .eq("password", password.trim())
-        .single();
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username: username.trim(), password: password.trim() }),
+      });
+      const data = await res.json();
 
-      if (error || !data) {
-        throw new Error("Invalid workspace username or password.");
+      if (!res.ok) {
+        throw new Error(data.error || "Authentication failed.");
       }
 
-      login({ id: data.id, username: data.username });
-      toast.success(`Welcome back, ${data.username}! Access granted.`, { icon: "🔑" });
+      toast.success(`Welcome back, ${data.user.username}! Access granted.`, { icon: "🔑" });
+      router.push("/");
     } catch (err) {
-      console.error("Authentication error:", err);
       toast.error(err.message || "Failed to authenticate workspace.");
     } finally {
       setLoading(false);
@@ -84,27 +76,29 @@ export default function LoginPage() {
       return;
     }
 
+    if (password.trim().length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
+
     setLoading(true);
     try {
-      // Create users table if it fails or just insert directly
-      const { data, error } = await supabase
-        .from("users")
-        .insert([
-          {
-            username: username.trim(),
-            password: password.trim(),
-          }
-        ])
-        .select()
-        .single();
+      const res = await fetch("/api/auth/setup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ username: username.trim(), password: password.trim() }),
+      });
+      const data = await res.json();
 
-      if (error) throw error;
+      if (!res.ok) {
+        throw new Error(data.error || "Initialization failed.");
+      }
 
-      login({ id: data.id, username: data.username });
       toast.success("Master Administrator Account initialized successfully!", { icon: "⚙️" });
+      router.push("/");
     } catch (err) {
-      console.error("Setup error:", err);
-      toast.error("Initialization failed: " + err.message);
+      toast.error(err.message || "Initialization failed.");
     } finally {
       setLoading(false);
     }
@@ -140,8 +134,8 @@ export default function LoginPage() {
             {isSetupMode ? "Setup Workspace" : "Workspace Access"}
           </h1>
           <p className="text-body-sm text-secondary px-6">
-            {isSetupMode 
-              ? "Initialize your secure master user credentials to start crafting content." 
+            {isSetupMode
+              ? "Initialize your secure master user credentials to start crafting content."
               : "Verify your credentials to unlock your personal AI-powered operating system."}
           </p>
         </div>
@@ -153,8 +147,8 @@ export default function LoginPage() {
               <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Admin Username</label>
               <div className="relative">
                 <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">person</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="e.g. admin"
@@ -165,11 +159,11 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-1.5 text-left">
-              <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Secret Password</label>
+              <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Secret Password (min. 8 chars)</label>
               <div className="relative">
                 <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">lock</span>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -183,8 +177,8 @@ export default function LoginPage() {
               <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Confirm Password</label>
               <div className="relative">
                 <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">lock_reset</span>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
@@ -194,7 +188,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button 
+            <button
               type="submit"
               disabled={loading}
               className="w-full py-3.5 bg-primary text-on-primary rounded-xl font-label-md hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 font-bold mt-2"
@@ -209,8 +203,8 @@ export default function LoginPage() {
               <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Username</label>
               <div className="relative">
                 <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">person</span>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Your admin username"
@@ -224,8 +218,8 @@ export default function LoginPage() {
               <label className="text-[11px] font-jetbrains-mono uppercase tracking-wider text-secondary font-bold">Password</label>
               <div className="relative">
                 <span className="material-symbols-outlined text-secondary absolute left-3.5 top-1/2 -translate-y-1/2 text-[18px]">lock</span>
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
@@ -235,7 +229,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <button 
+            <button
               type="submit"
               disabled={loading}
               className="w-full py-3.5 bg-midnight-void text-primary-fixed rounded-xl font-label-md hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-md disabled:opacity-50 font-bold mt-2"
@@ -249,7 +243,7 @@ export default function LoginPage() {
         {/* Dynamic Footer Details */}
         <div className="mt-8 pt-6 border-t border-border-subtle flex items-center justify-center text-[11px] font-jetbrains-mono text-secondary tracking-wide uppercase">
           <span className="material-symbols-outlined text-[14px] text-success-vibrant mr-1.5">shield</span>
-          Secure Offline Sandbox • Easzy OS v1.1
+          Secure Session Auth • Easzy OS v1.2
         </div>
 
       </div>
