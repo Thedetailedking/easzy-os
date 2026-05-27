@@ -24,6 +24,13 @@ function CampaignContent() {
   const [marketFitDescription, setMarketFitDescription] = useState("Fill out your campaign parameters to evaluate.");
 
   // AI Chat & Outputs State
+  const [chatHistories, setChatHistories] = useState({
+    sequence: [],
+    outreach: [],
+    leadgen: [],
+    posting: [],
+    offer: []
+  });
   const [chatHistory, setChatHistory] = useState([]);
   const [launchSequence, setLaunchSequence] = useState([]);
   const [outreachScripts, setOutreachScripts] = useState("");
@@ -32,6 +39,12 @@ function CampaignContent() {
   const [offerCalibrator, setOfferCalibrator] = useState("");
 
   const [activeTab, setActiveTab] = useState("sequence"); // sequence, outreach, leadgen, posting, offer
+  
+  // Sync the active tab's chat history state when activeTab or chatHistories changes
+  useEffect(() => {
+    setChatHistory(chatHistories[activeTab] || []);
+  }, [activeTab, chatHistories]);
+
   const [chatInput, setChatInput] = useState("");
   const [isLoadingChat, setIsLoadingChat] = useState(false);
   const [isLoadingOutput, setIsLoadingOutput] = useState(false);
@@ -107,6 +120,65 @@ function CampaignContent() {
     }
   };
 
+  const loadChatHistory = (chatHistoryFromDb) => {
+    const defaultGreetings = {
+      sequence: [
+        {
+          role: "assistant",
+          content: "👋 Welcome to the Launch Sequence co-pilot!\n\nI'll help you orchestrate your curiosity hook, value drop, organic waiting list, and opening day announcements. What are we launching today?"
+        }
+      ],
+      outreach: [
+        {
+          role: "assistant",
+          content: "👋 Welcome to the DM Outreach co-pilot!\n\nLet's draft high-converting, personalized DM scripts and conversational outreach messages to engage waitlists organically. Who is our target avatar?"
+        }
+      ],
+      leadgen: [
+        {
+          role: "assistant",
+          content: "👋 Welcome to the Lead Magnet co-pilot!\n\nWe will outline high-value lead magnets, cheat sheets, checklists, and mini-courses that solve target problems instantly. What problem does your audience want solved first?"
+        }
+      ],
+      posting: [
+        {
+          role: "assistant",
+          content: "👋 Welcome to the Posting Content co-pilot!\n\nLet's structure a 7-day organic posting schedule with value-led hooks, stories, and clear CTAs. What platforms are you active on?"
+        }
+      ],
+      offer: [
+        {
+          role: "assistant",
+          content: "👋 Welcome to the $100M Offer co-pilot!\n\nI will help you craft an irresistible, low-friction, high-value Hormozi-style Grand Slam Offer that makes saying no feel stupid. What is your core product or service?"
+        }
+      ]
+    };
+
+    if (!chatHistoryFromDb) {
+      return defaultGreetings;
+    }
+
+    if (Array.isArray(chatHistoryFromDb)) {
+      // Legacy array-based history. Migrate it into the sequence tab, and initialize default greetings for others
+      return {
+        sequence: chatHistoryFromDb.length > 0 ? chatHistoryFromDb : defaultGreetings.sequence,
+        outreach: defaultGreetings.outreach,
+        leadgen: defaultGreetings.leadgen,
+        posting: defaultGreetings.posting,
+        offer: defaultGreetings.offer
+      };
+    }
+
+    // It's already an object. We merge it with default greetings just in case any keys are missing.
+    return {
+      sequence: chatHistoryFromDb.sequence || defaultGreetings.sequence,
+      outreach: chatHistoryFromDb.outreach || defaultGreetings.outreach,
+      leadgen: chatHistoryFromDb.leadgen || defaultGreetings.leadgen,
+      posting: chatHistoryFromDb.posting || defaultGreetings.posting,
+      offer: chatHistoryFromDb.offer || defaultGreetings.offer
+    };
+  };
+
   // Helper to load selected campaign attributes into state
   const selectCampaign = (campaign) => {
     setSelectedCampaignId(campaign.id);
@@ -119,7 +191,10 @@ function CampaignContent() {
     setMarketFitScore(campaign.market_fit_score || "--");
     setMarketFitDescription(campaign.market_fit_description || "Evaluate campaign to see score.");
 
-    setChatHistory(campaign.chat_history || []);
+    const loadedHistories = loadChatHistory(campaign.chat_history);
+    setChatHistories(loadedHistories);
+    setChatHistory(loadedHistories[activeTab] || []);
+    
     setLaunchSequence(campaign.launch_sequence || []);
     setOutreachScripts(campaign.outreach_scripts || "");
     setLeadGenPlan(campaign.lead_gen_plan || "");
@@ -139,12 +214,9 @@ function CampaignContent() {
     setMarketFitScore("--");
     setMarketFitDescription("Fill out details and talk to Claude to evaluate fit.");
 
-    setChatHistory([
-      {
-        role: "assistant",
-        content: "👋 Welcome to your interactive Marketing & Strategy Planner!\n\nI'm Claude, your marketing co-pilot. I embody the frameworks of Alex Hormozi ($100M Offers, $100M Leads) to build campaigns, outreach scripts, and posting strategies that generate leads and clients.\n\nFill in your Project Architecture details on the left, and let me know what we are launching today!"
-      }
-    ]);
+    const freshGreetings = loadChatHistory(null);
+    setChatHistories(freshGreetings);
+    setChatHistory(freshGreetings[activeTab]);
     setLaunchSequence([]);
     setOutreachScripts("");
     setLeadGenPlan("");
@@ -219,7 +291,7 @@ function CampaignContent() {
       audience: audience,
       market_fit_score: marketFitScore,
       market_fit_description: marketFitDescription,
-      chat_history: chatHistory,
+      chat_history: chatHistories,
       launch_sequence: launchSequence,
       outreach_scripts: outreachScripts,
       lead_gen_plan: leadGenPlan,
@@ -346,6 +418,7 @@ ${trainingStr || "No references. Sound conversational, professional, and clear."
     const userMsg = { role: "user", content: activeText };
     const updatedHistory = [...chatHistory, userMsg];
     setChatHistory(updatedHistory);
+    setChatHistories(prev => ({ ...prev, [activeTab]: updatedHistory }));
     if (!presetPrompt) setChatInput("");
     setIsLoadingChat(true);
 
@@ -382,6 +455,9 @@ Who it's for (Audience): ${audience || "Not filled"}
       const aiMsg = { role: "assistant", content: data.result };
       const newHistory = [...updatedHistory, aiMsg];
       setChatHistory(newHistory);
+      
+      const newHistories = { ...chatHistories, [activeTab]: newHistory };
+      setChatHistories(newHistories);
 
       // Auto-update specific outputs dynamically depending on quick-chips
       let updatedOutreach = outreachScripts;
@@ -421,7 +497,7 @@ Who it's for (Audience): ${audience || "Not filled"}
         audience: audience,
         market_fit_score: marketFitScore,
         market_fit_description: marketFitDescription,
-        chat_history: newHistory,
+        chat_history: newHistories,
         launch_sequence: launchSequence,
         outreach_scripts: updatedOutreach,
         lead_gen_plan: updatedLeadGen,
@@ -436,7 +512,7 @@ Who it's for (Audience): ${audience || "Not filled"}
     }
   };
 
-  // 4. Generate structured blueprints (Launch Sequence & Market Fit)
+  // 4. Generate structured blueprints (All 5 Workspace Tabs & Market Fit)
   const handleGenerateWorkspaceBlueprints = async () => {
     if (!projectName.trim() || !solution.trim() || !audience.trim()) {
       toast.error("Please fill in Project Name, Solution, and Audience first!");
@@ -459,8 +535,7 @@ Who it's for (Audience): ${audience || "Not filled"}
       }
     } catch (e) {}
 
-    const prompt = `Based on the following product details, generate a dynamic 4-part launch sequence customized to my goal.
-Also evaluate the Market Fit Score based on the audience.
+    const prompt = `Based on the following product details, generate a comprehensive campaign strategy bundle for all 5 strategic tabs simultaneously: Launch Sequence, Outreach scripts, Lead Gen design, 7-Day Posting plan, and $100M Grand Slam Offer components.
 
 Project Name: ${projectName}
 Primary Goal: ${primaryGoal}
@@ -469,7 +544,11 @@ What it does: ${solution}
 What problem it solves: ${problem}
 Target Audience: ${audience}
 
-Return a VALID RAW JSON OBJECT ONLY. Format exactly like this:
+IMPORTANT PREMISE: The user does NOT have any existing email list, email subscribers, or client base.
+Therefore, DO NOT generate cold email campaigns, newsletters, or cold outreach scripts.
+Instead, all 5 categories of generated strategy assets MUST focus strictly on organic waiting lists, interest curiosity hooks, social media value loops, community value drops, and conversational DMs. Use Alex Hormozi's modern organic philosophy.
+
+You MUST return a VALID RAW JSON OBJECT ONLY. Format exactly like this:
 {
   "marketFit": {
     "score": "95%",
@@ -478,13 +557,46 @@ Return a VALID RAW JSON OBJECT ONLY. Format exactly like this:
   "sequence": [
     {
       "id": 1,
-      "title": "Part Title (e.g. The Hormozi Curiosity Hook)",
-      "description": "Provide complete high-converting copy or script details for this part of the campaign.",
-      "badges": ["EMAIL", "LINKEDIN"]
+      "title": "Launch Part Title (e.g. Part 1: The Social Media Curiosity Loop)",
+      "description": "Detailed strategic copy instructions, curiosity post structure, and waitlist call-to-action...",
+      "badges": ["LINKEDIN", "HOOK"]
+    }
+  ],
+  "outreach": [
+    {
+      "id": 1,
+      "title": "Outreach Phase/Script (e.g. Script 1: The Hand-Raiser Follow-Up)",
+      "description": "A conversational direct message script to send to hand-raisers, focused on relationship-building...",
+      "badges": ["DM", "SCRIPT"]
+    }
+  ],
+  "leadgen": [
+    {
+      "id": 1,
+      "title": "Lead Magnet Element (e.g. Element 1: The Grand Slam Asset)",
+      "description": "The exact outline of the lead magnet, checklist, or template that solves the main problem immediately...",
+      "badges": ["LEAD MAGNET", "VALUE"]
+    }
+  ],
+  "posting": [
+    {
+      "id": 1,
+      "title": "Day 1: The Value Drop",
+      "description": "Complete Day 1 organic post structure, value details, and hand-raiser Call To Action...",
+      "badges": ["POSTING", "DAY 1"]
+    }
+  ],
+  "offer": [
+    {
+      "id": 1,
+      "title": "Offer Component (e.g. Component 1: Core Value Stack & Dream Outcome)",
+      "description": "Designing the irresistible Grand Slam Offer stacking benefits, naming bonuses, and pricing...",
+      "badges": ["OFFER", "HORMOZI"]
     }
   ]
 }
-Ensure sequence array has exactly 4 items. Do not include markdown code fence formatting.`;
+
+Ensure sequence, outreach, leadgen, posting, and offer arrays each have exactly 4 items. Do not include markdown code fence formatting. Ensure the tone is highly energetic, direct, cliché-free, natural human voice (avoid sterile AI-isms).`;
 
     try {
       const response = await fetch("/api/campaign/generate", {
@@ -511,10 +623,18 @@ Ensure sequence array has exactly 4 items. Do not include markdown code fence fo
       }
 
       const newSeq = parsedResponse.sequence || [];
+      const newOutreach = parsedResponse.outreach || [];
+      const newLeadgen = parsedResponse.leadgen || [];
+      const newPosting = parsedResponse.posting || [];
+      const newOffer = parsedResponse.offer || [];
       const newScore = parsedResponse.marketFit?.score || "90%";
       const newDesc = parsedResponse.marketFit?.description || "Excellent product market fit.";
 
       setLaunchSequence(newSeq);
+      setOutreachScripts(newOutreach);
+      setLeadGenPlan(newLeadgen);
+      setPostingStrategy(newPosting);
+      setOfferCalibrator(newOffer);
       setMarketFitScore(newScore);
       setMarketFitDescription(newDesc);
       setActiveTab("sequence");
@@ -529,22 +649,210 @@ Ensure sequence array has exactly 4 items. Do not include markdown code fence fo
         audience: audience,
         market_fit_score: newScore,
         market_fit_description: newDesc,
-        chat_history: chatHistory,
+        chat_history: chatHistories,
         launch_sequence: newSeq,
-        outreach_scripts: outreachScripts,
-        lead_gen_plan: leadGenPlan,
-        posting_strategy: postingStrategy,
-        offer_calibrator: offerCalibrator,
+        outreach_scripts: newOutreach,
+        lead_gen_plan: newLeadgen,
+        posting_strategy: newPosting,
+        offer_calibrator: newOffer,
         updated_at: new Date().toISOString()
       });
 
-      toast.success("Launch sequence blueprints generated successfully!");
+      toast.success("All 5 strategy workspace blueprints built successfully!", { icon: "🔥" });
     } catch (err) {
       toast.error("Blueprint generation failed: " + err.message);
     } finally {
       setIsLoadingOutput(false);
       setActiveOutputLoading("");
     }
+  };
+
+  // Interactive "Clear Chat" Utility for activeTab
+  const handleClearChat = async () => {
+    const freshGreetings = loadChatHistory(null);
+    const clearedHistory = freshGreetings[activeTab];
+    const updatedHistories = { ...chatHistories, [activeTab]: clearedHistory };
+    
+    setChatHistories(updatedHistories);
+    setChatHistory(clearedHistory);
+    setChatInput("");
+
+    await handleSaveCampaign({
+      project_name: projectName || "Unnamed Campaign",
+      primary_goal: primaryGoal,
+      is_free: isFree,
+      solution: solution,
+      problem: problem,
+      audience: audience,
+      market_fit_score: marketFitScore,
+      market_fit_description: marketFitDescription,
+      chat_history: updatedHistories,
+      launch_sequence: launchSequence,
+      outreach_scripts: outreachScripts,
+      lead_gen_plan: leadGenPlan,
+      posting_strategy: postingStrategy,
+      offer_calibrator: offerCalibrator,
+      updated_at: new Date().toISOString()
+    });
+
+    toast.success("Chat thread cleared.", { icon: "🧹" });
+  };
+
+  // Robust universal card-based strategy tab rendering helper
+  const renderBlueprintCards = (content, defaultTitle) => {
+    let cards = [];
+
+    // Helper to determine badges based on content
+    const inferBadges = (title, text) => {
+      const badges = [];
+      const lowerT = (title || "").toLowerCase();
+      const lowerX = (text || "").toLowerCase();
+
+      if (lowerT.includes("linkedin") || lowerX.includes("linkedin")) badges.push("LINKEDIN");
+      if (lowerT.includes("email") || lowerX.includes("email")) badges.push("EMAIL");
+      if (lowerT.includes("dm") || lowerX.includes("direct message") || lowerX.includes("dm")) badges.push("DM");
+      if (lowerT.includes("hook") || lowerX.includes("hook")) badges.push("HOOK");
+      if (lowerT.includes("lead magnet") || lowerX.includes("lead magnet")) badges.push("VALUE DROP");
+      if (lowerT.includes("offer") || lowerX.includes("offer")) badges.push("OFFER");
+      if (lowerT.includes("script") || lowerX.includes("script")) badges.push("SCRIPT");
+      if (lowerT.includes("day") || lowerX.includes("day ")) badges.push("POST");
+
+      if (badges.length === 0) {
+        badges.push("STRATEGY");
+      }
+      return badges.slice(0, 3);
+    };
+
+    if (Array.isArray(content)) {
+      cards = content;
+    } else if (typeof content === "string" && content.trim()) {
+      // Try to parse as JSON first
+      try {
+        const parsed = JSON.parse(content);
+        if (Array.isArray(parsed)) {
+          cards = parsed;
+        } else if (parsed && typeof parsed === "object") {
+          const possibleArray = parsed.sequence || parsed.outreach || parsed.leadgen || parsed.posting || parsed.offer;
+          if (Array.isArray(possibleArray)) {
+            cards = possibleArray;
+          } else {
+            cards = [parsed];
+          }
+        }
+      } catch (e) {
+        // Fall back to Markdown parser
+        const sections = [];
+        const lines = content.split("\n");
+        let currentCard = null;
+        let currentDescLines = [];
+
+        lines.forEach((line) => {
+          const cleanLine = line.trim();
+          const headerMatch = line.match(/^(?:###|##|#|\d+\.|\*\*Part \d+:?\*\*|\*\*Day \d+:?\*\*|\*\*[^*]+\*\*)\s*(.*)$/);
+          
+          if (headerMatch && cleanLine.length > 3) {
+            if (currentCard) {
+              currentCard.description = currentDescLines.join("\n").trim();
+              if (currentCard.description) {
+                sections.push(currentCard);
+              }
+            }
+            let title = headerMatch[1] || cleanLine;
+            title = title.replace(/\*\*/g, "").trim();
+            currentCard = {
+              id: sections.length + 1,
+              title: title,
+              badges: inferBadges(title, ""),
+              description: ""
+            };
+            currentDescLines = [];
+          } else {
+            if (currentCard) {
+              currentDescLines.push(line);
+            } else if (cleanLine) {
+              currentCard = {
+                id: 1,
+                title: defaultTitle || "Strategist Overview",
+                badges: ["OVERVIEW"],
+                description: ""
+              };
+              currentDescLines.push(line);
+            }
+          }
+        });
+
+        if (currentCard) {
+          currentCard.description = currentDescLines.join("\n").trim();
+          if (currentCard.description) {
+            sections.push(currentCard);
+          }
+        }
+
+        sections.forEach(c => {
+          c.badges = inferBadges(c.title, c.description);
+        });
+
+        cards = sections;
+      }
+    }
+
+    if (cards.length === 0) {
+      return (
+        <div className="text-center py-20 text-secondary border border-dashed border-border-subtle rounded-xl flex flex-col items-center gap-3">
+          <span className="material-symbols-outlined text-[36px] opacity-20">insights</span>
+          <p className="text-body-sm">No strategy details available yet. Click "Build Blueprint" to generate!</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="space-y-4">
+        {cards.map((card, idx) => {
+          const cardId = card.id || (idx + 1);
+          const cardTitle = card.title || `${defaultTitle} Card`;
+          const cardDesc = card.description || "";
+          const badges = card.badges || inferBadges(cardTitle, cardDesc);
+          
+          return (
+            <div key={cardId} className="bg-surface-main border border-border-subtle rounded-xl p-4 shadow-sm border-l-4 border-l-primary flex flex-col gap-3 group animate-[fadeIn_0.3s_ease-out]">
+              <div className="flex justify-between items-center">
+                <span className="font-jetbrains-mono text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">Part 0{cardId}</span>
+                <div className="flex gap-1">
+                  {badges.map(b => (
+                    <span key={b} className="text-[8px] font-jetbrains-mono px-1.5 py-0.5 bg-surface-subtle border border-border-subtle text-secondary rounded uppercase">{b}</span>
+                  ))}
+                </div>
+              </div>
+              <h4 className="font-headline-md text-[16px] text-on-surface">{cardTitle}</h4>
+              <p className="text-body-sm text-secondary leading-relaxed whitespace-pre-wrap">{cardDesc}</p>
+              <div className="flex gap-2 justify-end pt-2 border-t border-border-subtle/50 opacity-80 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={() => handleCopyText(cardDesc)} 
+                  className="p-1.5 hover:text-primary transition-colors flex items-center" 
+                  title="Copy Content"
+                >
+                  <span className="material-symbols-outlined text-[18px]">content_copy</span>
+                </button>
+                <button 
+                  onClick={() => handleSaveToBankAsNote(`${defaultTitle}: ${cardTitle}`, cardDesc)}
+                  className="p-1.5 hover:text-primary transition-colors flex items-center text-secondary"
+                  title="Save to Idea Bank"
+                >
+                  <span className="material-symbols-outlined text-[18px]">folder_special</span>
+                </button>
+                <button 
+                  onClick={() => handleSendToCalendar(cardTitle, cardDesc, badges[0] || "LinkedIn")} 
+                  className="p-1.5 hover:text-primary transition-colors flex items-center text-primary" 
+                  title="Send Draft to Calendar"
+                >
+                  <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
   };
 
   // Helper utility to sanitize and map the platform tags to Supabase check constraints
@@ -895,9 +1203,18 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
               <span className="material-symbols-outlined text-primary text-[20px]">psychology</span>
               Co-pilot Chat
             </h3>
-            {isLoadingChat && (
-              <span className="text-[10px] font-jetbrains-mono text-primary animate-pulse">CLAUDE THINKING...</span>
-            )}
+            <div className="flex items-center gap-2.5">
+              {isLoadingChat && (
+                <span className="text-[10px] font-jetbrains-mono text-primary animate-pulse">CLAUDE THINKING...</span>
+              )}
+              <button 
+                onClick={handleClearChat}
+                className="p-1 text-secondary hover:text-error-vibrant rounded transition-colors flex items-center"
+                title="Clear current tab's chat thread"
+              >
+                <span className="material-symbols-outlined text-[20px]">delete_sweep</span>
+              </button>
+            </div>
           </div>
 
           {/* Quick-action Strategy Chips (Design System Tags) */}
@@ -1071,42 +1388,13 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                 {/* TAB 1: Launch Sequence */}
                 {activeTab === "sequence" && (
                   <div className="space-y-4">
-                    {launchSequence.length === 0 ? (
+                    {(!launchSequence || (Array.isArray(launchSequence) && launchSequence.length === 0)) ? (
                       <div className="text-center py-20 text-secondary border border-dashed border-border-subtle rounded-xl flex flex-col items-center gap-3">
                         <span className="material-symbols-outlined text-[36px] opacity-20">rocket_launch</span>
                         <p className="text-body-sm">Click "Build Blueprint" to generate your Launch sequence blueprint!</p>
                       </div>
                     ) : (
-                      launchSequence.map((card) => (
-                        <div key={card.id} className="bg-surface-main border border-border-subtle rounded-xl p-4 shadow-sm border-l-4 border-l-primary flex flex-col gap-3 group">
-                          <div className="flex justify-between items-center">
-                            <span className="font-jetbrains-mono text-[10px] bg-primary/10 text-primary font-bold px-2 py-0.5 rounded">Part 0{card.id}</span>
-                            <div className="flex gap-1">
-                              {card.badges && card.badges.map(b => (
-                                <span key={b} className="text-[8px] font-jetbrains-mono px-1.5 py-0.5 bg-surface-subtle border border-border-subtle text-secondary rounded uppercase">{b}</span>
-                              ))}
-                            </div>
-                          </div>
-                          <h4 className="font-headline-md text-[16px] text-on-surface">{card.title}</h4>
-                          <p className="text-body-sm text-secondary leading-relaxed whitespace-pre-wrap">{card.description}</p>
-                          <div className="flex gap-2 justify-end pt-2 border-t border-border-subtle/50 opacity-80 group-hover:opacity-100 transition-opacity">
-                            <button 
-                              onClick={() => handleCopyText(card.description)} 
-                              className="p-1.5 hover:text-primary transition-colors flex items-center" 
-                              title="Copy Script Content"
-                            >
-                              <span className="material-symbols-outlined text-[18px]">content_copy</span>
-                            </button>
-                            <button 
-                              onClick={() => handleSendToCalendar(card.title, card.description, card.badges?.[0] || "LinkedIn")} 
-                              className="p-1.5 hover:text-primary transition-colors flex items-center text-primary" 
-                              title="Send Draft to Calendar"
-                            >
-                              <span className="material-symbols-outlined text-[18px]">calendar_month</span>
-                            </button>
-                          </div>
-                        </div>
-                      ))
+                      renderBlueprintCards(launchSequence, "Launch Sequence")
                     )}
                   </div>
                 )}
@@ -1114,24 +1402,13 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                 {/* TAB 2: DM Outreach Scripts */}
                 {activeTab === "outreach" && (
                   <div className="space-y-4">
-                    {!outreachScripts ? (
+                    {(!outreachScripts || (Array.isArray(outreachScripts) && outreachScripts.length === 0)) ? (
                       <div className="text-center py-20 text-secondary border border-dashed border-border-subtle rounded-xl flex flex-col items-center gap-3">
                         <span className="material-symbols-outlined text-[36px] opacity-20">forum</span>
-                        <p className="text-body-sm">Click "DM Outreach" in the co-pilot chips to generate conversational outreach templates!</p>
+                        <p className="text-body-sm">Click "Build Blueprint" or use Co-pilot chat to generate outreach scripts!</p>
                       </div>
                     ) : (
-                      <div className="bg-surface-main border border-border-subtle rounded-xl p-4 shadow-sm space-y-4 relative group">
-                        <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
-                          <span className="font-jetbrains-mono text-[10px] text-primary font-bold">ALEX HORMOZI LEADS MODEL</span>
-                          <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleCopyText(outreachScripts)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Outreach Scripts"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSaveToBankAsNote(`Outreach Scripts Blueprint`, outreachScripts)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
-                          </div>
-                        </div>
-                        <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
-                          {outreachScripts}
-                        </div>
-                      </div>
+                      renderBlueprintCards(outreachScripts, "Outreach Script")
                     )}
                   </div>
                 )}
@@ -1139,24 +1416,13 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                 {/* TAB 3: Lead magnet Funnel */}
                 {activeTab === "leadgen" && (
                   <div className="space-y-4">
-                    {!leadGenPlan ? (
+                    {(!leadGenPlan || (Array.isArray(leadGenPlan) && leadGenPlan.length === 0)) ? (
                       <div className="text-center py-20 text-secondary border border-dashed border-border-subtle rounded-xl flex flex-col items-center gap-3">
                         <span className="material-symbols-outlined text-[36px] opacity-20">card_giftcard</span>
-                        <p className="text-body-sm">Click "Lead Magnet" in the co-pilot chips to design a high-value lead magnet blueprint!</p>
+                        <p className="text-body-sm">Click "Build Blueprint" or use Co-pilot chat to design a lead magnet!</p>
                       </div>
                     ) : (
-                      <div className="bg-surface-main border border-border-subtle rounded-xl p-4 shadow-sm space-y-4 relative group">
-                        <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
-                          <span className="font-jetbrains-mono text-[10px] text-primary font-bold">GRAND SLAM LEAD MAGNET</span>
-                          <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleCopyText(leadGenPlan)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Lead Gen Outline"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSaveToBankAsNote(`Lead Magnet Blueprint`, leadGenPlan)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
-                          </div>
-                        </div>
-                        <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
-                          {leadGenPlan}
-                        </div>
-                      </div>
+                      renderBlueprintCards(leadGenPlan, "Lead Magnet")
                     )}
                   </div>
                 )}
@@ -1164,24 +1430,13 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                 {/* TAB 4: Organic Posting Strategy */}
                 {activeTab === "posting" && (
                   <div className="space-y-4">
-                    {!postingStrategy ? (
+                    {(!postingStrategy || (Array.isArray(postingStrategy) && postingStrategy.length === 0)) ? (
                       <div className="text-center py-20 text-secondary border border-dashed border-border-subtle rounded-xl flex flex-col items-center gap-3">
                         <span className="material-symbols-outlined text-[36px] opacity-20">calendar_today</span>
-                        <p className="text-body-sm">Click "Posting Plan" or "Hook Architect" to map out your content feed strategy!</p>
+                        <p className="text-body-sm">Click "Build Blueprint" or use Co-pilot chat to generate a posting schedule!</p>
                       </div>
                     ) : (
-                      <div className="bg-surface-main border border-border-subtle rounded-xl p-4 shadow-sm space-y-4 relative group">
-                        <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
-                          <span className="font-jetbrains-mono text-[10px] text-primary font-bold">POSTING TIMELINE & PILLARS</span>
-                          <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleCopyText(postingStrategy)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Posting Schedule"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSaveToBankAsNote(`Campaign Posting Blueprint`, postingStrategy)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
-                          </div>
-                        </div>
-                        <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
-                          {postingStrategy}
-                        </div>
-                      </div>
+                      renderBlueprintCards(postingStrategy, "Posting Strategy")
                     )}
                   </div>
                 )}
@@ -1189,24 +1444,13 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                 {/* TAB 5: Irresistible $100M Grand Slam Offer Sheet */}
                 {activeTab === "offer" && (
                   <div className="space-y-4">
-                    {!offerCalibrator ? (
+                    {(!offerCalibrator || (Array.isArray(offerCalibrator) && offerCalibrator.length === 0)) ? (
                       <div className="text-center py-20 text-secondary border border-dashed border-border-subtle rounded-xl flex flex-col items-center gap-3">
                         <span className="material-symbols-outlined text-[36px] opacity-20">payments</span>
-                        <p className="text-body-sm">Click "Offer Calibrator" in the co-pilot chips to calculate your Grand Slam Offer details!</p>
+                        <p className="text-body-sm">Click "Build Blueprint" or use Co-pilot chat to calibrate your offer!</p>
                       </div>
                     ) : (
-                      <div className="bg-surface-main border border-border-subtle rounded-xl p-4 shadow-sm space-y-4 relative group">
-                        <div className="flex justify-between items-center pb-2 border-b border-border-subtle">
-                          <span className="font-jetbrains-mono text-[10px] text-primary font-bold">$100M GRAND SLAM OFFER SHEET</span>
-                          <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                            <button onClick={() => handleCopyText(offerCalibrator)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Offer Sheet"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSaveToBankAsNote(`Hormozi $100M Offer Blueprint`, offerCalibrator)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
-                          </div>
-                        </div>
-                        <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
-                          {offerCalibrator}
-                        </div>
-                      </div>
+                      renderBlueprintCards(offerCalibrator, "Grand Slam Offer")
                     )}
                   </div>
                 )}
