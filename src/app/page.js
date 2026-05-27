@@ -62,10 +62,21 @@ export default function Dashboard() {
   const weekDays = Array.from({ length: 7 }).map((_, i) => {
     const d = new Date(startOfWeek);
     d.setDate(startOfWeek.getDate() + i);
+    const dayDrafts = allDrafts.filter(draft => {
+      if (!draft.scheduled_date) return false;
+      return new Date(draft.scheduled_date).toDateString() === d.toDateString();
+    });
+    // Also show unscheduled drafts created on this day
+    const unscheduledDrafts = allDrafts.filter(draft => {
+      if (draft.scheduled_date) return false;
+      return new Date(draft.created_at).toDateString() === d.toDateString();
+    });
     return {
       dayName: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][i],
       dateNum: d.getDate(),
-      isToday: d.toDateString() === today.toDateString()
+      isToday: d.toDateString() === today.toDateString(),
+      scheduledDrafts: dayDrafts,
+      unscheduledDrafts: unscheduledDrafts,
     };
   });
 
@@ -173,14 +184,37 @@ export default function Dashboard() {
               </div>
               <div className="bg-surface-main border border-border-subtle rounded-2xl overflow-hidden shadow-sm flex flex-col md:flex-row">
                 {weekDays.map((dayObj) => {
+                  const hasContent = dayObj.scheduledDrafts.length > 0 || dayObj.unscheduledDrafts.length > 0;
                   return (
                     <div key={dayObj.dayName} className={`flex-1 p-3 border-b md:border-b-0 md:border-r border-border-subtle last:border-0 relative ${dayObj.isToday ? 'bg-primary/5' : ''}`}>
                       <p className={`text-[10px] font-jetbrains-mono ${dayObj.isToday ? 'text-primary font-bold' : 'text-secondary'}`}>{dayObj.dayName} {dayObj.dateNum}</p>
                       
-                      <div className="mt-3 min-h-[40px] flex flex-col gap-1.5">
-                        <div className="w-full h-full border border-dashed border-border-subtle rounded flex items-center justify-center opacity-50">
-                          <span className="material-symbols-outlined text-[14px] text-secondary">add</span>
-                        </div>
+                      <div className="mt-2 min-h-[40px] flex flex-col gap-1">
+                        {dayObj.scheduledDrafts.map((draft, idx) => (
+                          <div
+                            key={draft.id + '-s'}
+                            onClick={() => router.push(`/output?capture_id=${draft.capture_id}`)}
+                            title={draft.post_type || draft.platform}
+                            className="w-full px-1.5 py-0.5 rounded text-[9px] font-jetbrains-mono truncate cursor-pointer bg-primary/15 text-primary border border-primary/20 hover:bg-primary/25 transition-colors"
+                          >
+                            {draft.platform || 'Draft'}
+                          </div>
+                        ))}
+                        {dayObj.unscheduledDrafts.map((draft, idx) => (
+                          <div
+                            key={draft.id + '-u'}
+                            onClick={() => router.push(`/output?capture_id=${draft.capture_id}`)}
+                            title={draft.post_type || draft.platform}
+                            className="w-full px-1.5 py-0.5 rounded text-[9px] font-jetbrains-mono truncate cursor-pointer bg-surface-container text-secondary border border-border-subtle hover:border-primary/30 hover:text-on-surface transition-colors"
+                          >
+                            {draft.platform || 'Draft'}
+                          </div>
+                        ))}
+                        {!hasContent && (
+                          <div className="w-full h-8 border border-dashed border-border-subtle rounded flex items-center justify-center opacity-40">
+                            <span className="material-symbols-outlined text-[14px] text-secondary">add</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                   );
