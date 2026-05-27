@@ -68,3 +68,36 @@ CREATE POLICY "Allow all operations for anon" ON public.user_settings FOR ALL US
 CREATE POLICY "Allow all operations for anon" ON public.captures FOR ALL USING (true);
 CREATE POLICY "Allow all operations for anon" ON public.drafts FOR ALL USING (true);
 CREATE POLICY "Allow all operations for anon" ON public.interview_sessions FOR ALL USING (true);
+
+-- 5. Marketing Campaigns (To store campaign metadata, chat threads, and structured plans)
+CREATE TABLE public.marketing_campaigns (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_name TEXT NOT NULL DEFAULT 'New Campaign',
+  primary_goal TEXT DEFAULT 'Pre-order Sales',
+  solution TEXT,
+  problem TEXT,
+  audience TEXT,
+  is_free BOOLEAN DEFAULT FALSE,
+  market_fit_score TEXT DEFAULT '--',
+  market_fit_description TEXT DEFAULT 'Fill out the form and generate a sequence to see fit.',
+  
+  -- Interactive Chat thread specific to this campaign
+  chat_history JSONB NOT NULL DEFAULT '[]'::jsonb,
+  
+  -- Structured results generated and refined by the AI
+  launch_sequence JSONB NOT NULL DEFAULT '[]'::jsonb,
+  outreach_scripts TEXT DEFAULT '',
+  lead_gen_plan TEXT DEFAULT '',
+  posting_strategy TEXT DEFAULT '',
+  offer_calibrator TEXT DEFAULT '',
+  
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS for marketing_campaigns
+ALTER TABLE public.marketing_campaigns ENABLE ROW LEVEL SECURITY;
+
+-- Policy for anon access in development
+CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR ALL USING (true);
+

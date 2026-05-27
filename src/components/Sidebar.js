@@ -26,10 +26,12 @@ export default function Sidebar() {
     { name: "Capture", icon: "input", href: "/capture" },
     { name: "Chat", icon: "chat", href: "/chat" },
     { name: "Output", icon: "smart_display", href: "/output" },
+    { name: "Campaign Planner", icon: "rocket_launch", href: "/campaign" },
     { name: "Calendar", icon: "calendar_today", href: "/calendar" },
     { name: "Bank", icon: "inventory_2", href: "/bank" },
     { name: "Settings", icon: "settings", href: "/settings" },
   ];
+
 
   return (
     <>

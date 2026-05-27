@@ -38,15 +38,42 @@ export async function POST(request) {
       } : undefined
     });
 
+    const finalSystemContext = systemContext + "\n\nCRITICAL CONSTRAINT: DO NOT include any introductory greetings, throat-clearing, conversational remarks, or polite headers (such as 'Here is your post:', 'Sure! Below is the content...'). Start IMMEDIATELY with the hook or the first line of generated copy. Returning conversational headers or intro sentences is strictly unacceptable.";
+
     const completion = await openai.chat.completions.create({
       model: model,
       messages: [
-        { role: "system", content: systemContext },
+        { role: "system", content: finalSystemContext },
         { role: "user", content: prompt }
       ],
     });
 
-    const content = completion.choices[0].message.content;
+    let content = completion.choices[0].message.content;
+    
+    // Post-process to remove conversational throat-clearing intro lines
+    const cleanLlmIntro = (text) => {
+      if (!text) return "";
+      let lines = text.split("\n");
+      const introRegex = /^(here is|here's|sure|certainly|absolutely|this is|below is|i have generated|i've generated|i can help|i've created|here are|sure!)/i;
+      
+      while (lines.length > 0) {
+        const trimmed = lines[0].trim();
+        if (!trimmed) {
+          lines.shift();
+          continue;
+        }
+        
+        if (trimmed.length < 150 && (trimmed.endsWith(":") || introRegex.test(trimmed))) {
+          lines.shift();
+          continue;
+        }
+        break;
+      }
+      
+      return lines.join("\n").trim();
+    };
+
+    content = cleanLlmIntro(content);
     
     return NextResponse.json({ result: content });
   } catch (error) {

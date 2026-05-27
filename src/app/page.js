@@ -29,17 +29,28 @@ export default function Dashboard() {
     fetchProfile();
   }, []);
 
-  // Calculate Content Health
+  // Calculate Content Health (Synchronized with Calendar Page!)
   const last7Days = Array.from({length: 7}).map((_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - i);
     return d.toDateString();
   });
-  const draftDates = new Set(allDrafts.map(d => new Date(d.created_at).toDateString()));
-  const consistencyScore = Math.round((last7Days.filter(d => draftDates.has(d)).length / 7) * 100) || 0;
+  
+  const scheduledCount = allDrafts.filter(d => d.scheduled_date).length;
+  const publishedCount = allDrafts.filter(d => d.scheduled_date && d.status === 'Published').length;
 
-  const uniquePlatforms = new Set(allDrafts.map(d => d.platform)).size;
-  const diversityScore = Math.round((uniquePlatforms / 4) * 100) || 0;
+  const consistencyDays = last7Days.filter(day => {
+    return allDrafts.some(d => {
+      if (!d.scheduled_date) return false;
+      return new Date(d.scheduled_date).toDateString() === day;
+    });
+  }).length;
+  const consistencyScore = Math.round((consistencyDays / 7) * 100) || 0;
+
+  const scheduledPlatforms = new Set(allDrafts.filter(d => d.scheduled_date).map(d => d.platform));
+  const diversityScore = Math.min(Math.round((scheduledPlatforms.size / 4) * 100), 100) || 0;
+
+  const healthScore = scheduledCount > 0 ? Math.round((publishedCount / scheduledCount) * 100) : 0;
 
   // Calculate Week at a Glance
   const today = new Date();
@@ -122,6 +133,18 @@ export default function Dashboard() {
                       <div className="h-full bg-primary-container rounded-full" style={{ width: `${diversityScore}%` }}></div>
                     </div>
                     <span className="font-label-md text-on-surface text-[14px]">{diversityScore}%</span>
+                  </div>
+                </div>
+
+                <div className="hidden sm:block w-px h-12 bg-border-subtle"></div>
+
+                <div className="text-left w-full sm:w-auto border-t sm:border-t-0 border-border-subtle pt-4 sm:pt-0">
+                  <p className="text-[10px] md:text-label-sm font-jetbrains-mono text-secondary uppercase tracking-wider mb-2">Pipeline Health</p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 sm:w-24 lg:w-32 h-2 bg-surface-container rounded-full overflow-hidden">
+                      <div className="h-full bg-success-vibrant rounded-full" style={{ width: `${healthScore}%` }}></div>
+                    </div>
+                    <span className="font-label-md text-on-surface text-[14px]">{healthScore}%</span>
                   </div>
                 </div>
 

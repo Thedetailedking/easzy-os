@@ -82,10 +82,11 @@ export default function Header() {
         </div>
 
         {/* Global Launch Button */}
-        <a href="/output#launch-campaign" className="bg-primary text-on-primary px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-label-sm md:text-label-md font-label-md flex items-center gap-1 hover:opacity-90 transition-all active:scale-95 shadow-sm whitespace-nowrap">
+        <Link href="/campaign" className="bg-primary text-on-primary px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-label-sm md:text-label-md font-label-md flex items-center gap-1 hover:opacity-90 transition-all active:scale-95 shadow-sm whitespace-nowrap">
           <span className="material-symbols-outlined text-[16px] md:text-[20px]">rocket_launch</span>
           <span className="hidden sm:inline">Launch</span>
-        </a>
+        </Link>
+
       </div>
     </header>
   );
