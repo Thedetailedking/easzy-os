@@ -77,9 +77,10 @@ ${trainingStr || "No training data provided."}
 
 YOUR INSTRUCTIONS:
 - You are helping the user develop their content.
-- Be highly flexible! Acknowledge the user's intent. If the user is just "brain dumping" or wants a simple post/short writeup without rigid CTA formatting, DO NOT badger them with persistent clarifying questions about target audience, CTA, or niche. Instead, offer a quick outline or say "Got it! Feel free to hit the 'I'm Done! Generate Content' button below to compile the post, or let me know if you want to tweak anything."
-- If the user explicitly asks you to write a post or seems ready, suggest a quick layout or draft immediately instead of asking more questions.
-- Otherwise, ask ONE short, helpful follow-up or clarifying question to refine the idea. Keep it natural, warm, and highly conversational.`;
+- Be highly flexible and context-aware! Acknowledge the user's intent. If they are "brain dumping" or want to write a simple post/text directly without an intensive interview, DO NOT persistently badger them with target audience, CTA, or niche questions. Instead, suggest a quick layout or outline immediately, and state "Feel free to click 'I'm Done! Generate Content' below to see the formatted post, or let me know if you want to tweak anything."
+- If the user explicitly asks you to draft/write a post or seems ready, suggest a natural, human-sounding draft immediately instead of asking more clarifying questions.
+- Never use sterile AI buzzwords or cliché transitional phrases ("delve", "tapestry", "leveraging", "landscape"). Avoid forcing regional/national context ("African business", "Nigerian market") awkwardly into the conversation unless the user specifically initiates it.
+- Ask exactly ONE short, conversational follow-up or clarifying question to refine the idea. Keep it natural, human, warm, and engaging.`;
         }
         const { data: captureData } = await supabase.from('captures').select('*').eq('id', activeCaptureId).single();
         const { data: sessions } = await supabase.from('interview_sessions').select('*').eq('capture_id', activeCaptureId).order('created_at', { ascending: false }).limit(1);
@@ -190,9 +191,10 @@ ${trainingStr || "No training data provided."}
 
 YOUR INSTRUCTIONS:
 - You are helping the user develop their content.
-- Be highly flexible! Acknowledge the user's intent. If the user is just "brain dumping" or wants a simple post/short writeup without rigid CTA formatting, DO NOT badger them with persistent clarifying questions about target audience, CTA, or niche. Instead, offer a quick outline or say "Got it! Feel free to hit the 'I'm Done! Generate Content' button below to compile the post, or let me know if you want to tweak anything."
-- If the user explicitly asks you to write a post or seems ready, suggest a quick layout or draft immediately instead of asking more questions.
-- Otherwise, ask ONE short, helpful follow-up or clarifying question to refine the idea. Keep it natural, warm, and highly conversational.`;
+- Be highly flexible and context-aware! Acknowledge the user's intent. If they are "brain dumping" or want to write a simple post/text directly without an intensive interview, DO NOT persistently badger them with target audience, CTA, or niche questions. Instead, suggest a quick layout or outline immediately, and state "Feel free to click 'I'm Done! Generate Content' below to see the formatted post, or let me know if you want to tweak anything."
+- If the user explicitly asks you to draft/write a post or seems ready, suggest a natural, human-sounding draft immediately instead of asking more clarifying questions.
+- Never use sterile AI buzzwords or cliché transitional phrases ("delve", "tapestry", "leveraging", "landscape"). Avoid forcing regional/national context ("African business", "Nigerian market") awkwardly into the conversation unless the user specifically initiates it.
+- Ask exactly ONE short, conversational follow-up or clarifying question to refine the idea. Keep it natural, human, warm, and engaging.`;
       }
       
       // Save user message immediately so it's not lost if they navigate away
@@ -438,6 +440,8 @@ YOUR INSTRUCTIONS:
 export default function ChatPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [historyItems, setHistoryItems] = useState([]);
+  const [showDeleteConfirmModal, setShowDeleteConfirmModal] = useState(false);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -448,31 +452,34 @@ export default function ChatPage() {
     loadHistory();
   }, []);
 
-  const handleDeleteCapture = async (e, id) => {
+  const handleDeleteCapture = (e, id) => {
     e.stopPropagation(); // Prevent card onClick trigger
-    if (typeof window === 'undefined') return;
+    setDeleteConfirmId(id);
+    setShowDeleteConfirmModal(true);
+  };
 
-    if (!confirm("Are you sure you want to delete this session? This action cannot be undone.")) {
-      return;
-    }
-
+  const confirmDeleteCapture = async () => {
+    if (!deleteConfirmId) return;
     try {
-      const { error } = await supabase.from('captures').delete().eq('id', id);
+      const { error } = await supabase.from('captures').delete().eq('id', deleteConfirmId);
       if (error) throw error;
       
-      toast.success("Session deleted successfully.");
+      toast.success("Session deleted successfully.", { icon: '🗑️' });
       
       // Update local state list
-      setHistoryItems(prev => prev.filter(item => item.id !== id));
+      setHistoryItems(prev => prev.filter(item => item.id !== deleteConfirmId));
       
       // If we deleted the active capture session, redirect to fresh /chat
       const activeId = new URLSearchParams(window.location.search).get("capture_id");
-      if (activeId === id) {
+      if (activeId === deleteConfirmId) {
         router.push('/chat');
       }
     } catch (err) {
       console.error("Delete capture error:", err);
       toast.error("Failed to delete session.");
+    } finally {
+      setShowDeleteConfirmModal(false);
+      setDeleteConfirmId(null);
     }
   };
 
@@ -509,7 +516,7 @@ export default function ChatPage() {
                    </span>
                    <button 
                      onClick={(e) => handleDeleteCapture(e, item.id)}
-                     className="text-secondary hover:text-error opacity-0 group-hover:opacity-100 transition-opacity p-1 flex rounded hover:bg-surface-main"
+                     className="text-secondary hover:text-error opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity p-1 flex rounded hover:bg-surface-main"
                      title="Delete Conversation"
                    >
                      <span className="material-symbols-outlined text-[16px]">delete</span>
@@ -536,6 +543,38 @@ export default function ChatPage() {
           <ChatContent />
         </Suspense>
       </div>
+
+      {/* Custom Premium Glassmorphic Delete Confirmation Modal */}
+      {showDeleteConfirmModal && (
+        <div className="fixed inset-0 bg-midnight-void/40 backdrop-blur-sm flex items-center justify-center z-50 animate-[fadeIn_0.2s_ease-out]">
+          <div className="bg-surface-main border border-border-subtle p-6 rounded-3xl max-w-sm w-full mx-4 shadow-2xl animate-[scaleIn_0.2s_ease-out]">
+            <div className="w-12 h-12 bg-error/10 text-error rounded-2xl flex items-center justify-center mb-4 shadow-sm">
+              <span className="material-symbols-outlined text-[28px]">delete_forever</span>
+            </div>
+            <h3 className="font-headline-md text-headline-md text-on-surface mb-2 font-bold">Delete Chat Session?</h3>
+            <p className="text-body-sm text-secondary mb-6 leading-relaxed">
+              This will permanently delete this conversation and all associated history from your vault. This action is irreversible.
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => {
+                  setShowDeleteConfirmModal(false);
+                  setDeleteConfirmId(null);
+                }} 
+                className="flex-1 py-3 bg-surface-subtle hover:bg-surface-dim text-on-surface rounded-xl font-label-md transition-colors"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDeleteCapture}
+                className="flex-1 py-3 bg-error text-white rounded-xl font-label-md hover:bg-error/90 active:scale-[0.98] transition-all shadow-md shadow-error/10 font-bold"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -140,18 +140,25 @@ function OutputContent() {
         llmApiKey = profile.llm_api_key || "";
         
         const trainingStr = (profile.training_data || []).map((t, i) => `REFERENCE ${i+1}:\n${t.content}`).join("\n\n");
-        personaContext = `You are adopting the following Persona:
+        personaContext = `You are adopting the following Brand Persona and Voice:
 Name: ${profile.user_name}
 Role: ${profile.primary_role}
 Target Audience: ${profile.target_audience}
 Goal/Positioning: ${profile.positioning_statement}
 
-Voice Sliders:
-Tone: ${profile.tone}, Rawness: ${profile.rawness}, Density: ${profile.density}
+Voice Dynamics (Scale 0-100):
+- Tone (Clinical vs Emotive): ${profile.tone}
+- Rawness (Polished vs Rough/Authentic): ${profile.rawness}
+- Density (Simple vs Expert): ${profile.density}
 
-TRAINING DATA / STYLE REFERENCES:
-${trainingStr || "No specific training data provided."}
-`;
+TRAINING WRITING STYLES / REFERENCES:
+${trainingStr || "No specific style references provided. Sound natural, conversational, and direct."}
+
+CRITICAL COPYWRITING DIRECTIVES:
+- Write like an elite human copywriter. Avoid generic corporate speak, dry formal outlines, and superficial marketing hype.
+- NEVER use generic, sterile AI buzzwords or cliché transitional phrases ("delve", "tapestry", "leveraging", "landscape", "revolutionize", "ecosystem", "elevate").
+- Avoid repeating generic regional or national slogans/clichés ("African business context", "Nigerian market") awkwardly in the copy unless the user's specific inputs explicitly necessitate it. Instead, focus on authentic value, relatable pain points, and strong consumer psychology.
+- Closely mimic the format, sentence structure, and authentic flow of the Training Writing References above. Keep sentences concise, punchy, and highly engaging.`;
       }
     } catch (e) {
       console.error("Error fetching persona profile:", e);
@@ -159,13 +166,16 @@ ${trainingStr || "No specific training data provided."}
     
     let platformContext = "";
     if (platformId === 'linkedin') {
-      platformContext = `Write a high-converting LinkedIn post. Include a catchy hook, well-spaced body paragraphs, and a clear call-to-action. Format: ${linkedinSubtab}.`;
+      platformContext = `Draft a high-converting LinkedIn post. Open with an authentic scroll-stopping hook (avoid cliché AI formatting). Structure the post with generous line breaks, punchy sentence-length variations, deep professional value, and a highly contextual, natural call-to-action. Format/Style: ${linkedinSubtab}.`;
     } else if (platformId === 'youtube') {
-      platformContext = "Write a fast-paced, 60-second YouTube Shorts script. Include [Hook], [Body/Value], and [Call to Action].";
+      platformContext = `Draft a fast-paced, highly engaging 60-second YouTube Shorts script. 
+- Ensure it sounds incredibly authentic, punchy, and conversational (avoid generic text readouts or rigid templates).
+- Structure logically with [HOOK] (0-5s scroll-stopper), [VALUE DEEP-DIVE] (the core practical insight), and [OUTRO] (quick low-friction follow-up or CTA).
+- Provide visual cues or sound descriptions in brackets e.g. [On-Screen Text], [SFX] only if helpful, keeping the voice script natural and relatable.`;
     } else if (platformId === 'instagram') {
-      platformContext = "Write an Instagram caption. Make it engaging, visually spaced, and include relevant hashtags at the bottom.";
+      platformContext = `Draft a compelling Instagram caption. Open with a striking statement, write short easily-readable paragraphs, use bullet points if sharing tips, and include a natural, conversational call-to-action. Paste a few relevant hashtags spaced out at the bottom.`;
     } else if (platformId === 'substack') {
-      platformContext = "Write a comprehensive newsletter or blog post. Include a headline, introduction, detailed sections, and conclusion.";
+      platformContext = `Write a comprehensive, premium newsletter or blog post. Include an engaging title, a conversational introduction setting the context, deeply valuable body sections with headers, and an authentic concluding thought with a clear value proposition.`;
     }
 
     if (isABTest) {

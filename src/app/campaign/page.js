@@ -583,6 +583,28 @@ Ensure sequence array has exactly 4 items. Do not include markdown code fence fo
     }
   };
 
+  // Save single block/script as a permanent Strategy Note in the Bank (Vault)
+  const handleSaveToBankAsNote = async (title, content) => {
+    if (!content || !content.trim()) return;
+    try {
+      const formattedTranscript = `[STRATEGY NOTE] ${title}\n\nCampaign: ${projectName || "Unnamed Campaign"}\n\n${content}`;
+      
+      const { error } = await supabase
+        .from('captures')
+        .insert([{ 
+          type: 'Text Idea', 
+          transcript: formattedTranscript 
+        }]);
+      
+      if (error) throw error;
+
+      toast.success(`Successfully saved "${title}" as a Strategy Note in your Idea Bank!`, { icon: '💼' });
+    } catch (err) {
+      console.error("Save to bank error:", err);
+      toast.error("Failed to save to bank: " + err.message);
+    }
+  };
+
   // Deepgram voice recording logic
   const startRecording = async () => {
     try {
@@ -1103,7 +1125,7 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                           <span className="font-jetbrains-mono text-[10px] text-primary font-bold">ALEX HORMOZI LEADS MODEL</span>
                           <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                             <button onClick={() => handleCopyText(outreachScripts)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Outreach Scripts"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSendToCalendar(`Campaign Outreach Scripts`, outreachScripts)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Send to Calendar"><span className="material-symbols-outlined text-[16px]">calendar_month</span></button>
+                            <button onClick={() => handleSaveToBankAsNote(`Outreach Scripts Blueprint`, outreachScripts)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
                           </div>
                         </div>
                         <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
@@ -1128,7 +1150,7 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                           <span className="font-jetbrains-mono text-[10px] text-primary font-bold">GRAND SLAM LEAD MAGNET</span>
                           <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                             <button onClick={() => handleCopyText(leadGenPlan)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Lead Gen Outline"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSendToCalendar(`Lead Magnet Blueprint`, leadGenPlan)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Send to Calendar"><span className="material-symbols-outlined text-[16px]">calendar_month</span></button>
+                            <button onClick={() => handleSaveToBankAsNote(`Lead Magnet Blueprint`, leadGenPlan)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
                           </div>
                         </div>
                         <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
@@ -1153,7 +1175,7 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                           <span className="font-jetbrains-mono text-[10px] text-primary font-bold">POSTING TIMELINE & PILLARS</span>
                           <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                             <button onClick={() => handleCopyText(postingStrategy)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Posting Schedule"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSendToCalendar(`Campaign Posting Schedule`, postingStrategy)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Send to Calendar"><span className="material-symbols-outlined text-[16px]">calendar_month</span></button>
+                            <button onClick={() => handleSaveToBankAsNote(`Campaign Posting Blueprint`, postingStrategy)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
                           </div>
                         </div>
                         <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">
@@ -1178,7 +1200,7 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
                           <span className="font-jetbrains-mono text-[10px] text-primary font-bold">$100M GRAND SLAM OFFER SHEET</span>
                           <div className="flex gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                             <button onClick={() => handleCopyText(offerCalibrator)} className="p-1 bg-surface-subtle rounded hover:text-primary transition-all flex" title="Copy Offer Sheet"><span className="material-symbols-outlined text-[16px]">content_copy</span></button>
-                            <button onClick={() => handleSendToCalendar(`Hormozi $100M Offer Blueprint`, offerCalibrator)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Send to Calendar"><span className="material-symbols-outlined text-[16px]">calendar_month</span></button>
+                            <button onClick={() => handleSaveToBankAsNote(`Hormozi $100M Offer Blueprint`, offerCalibrator)} className="p-1 bg-surface-subtle rounded hover:text-primary text-primary transition-all flex" title="Save Strategy Note to Bank"><span className="material-symbols-outlined text-[16px]">folder_special</span></button>
                           </div>
                         </div>
                         <div className="text-body-sm text-on-surface whitespace-pre-wrap leading-relaxed">

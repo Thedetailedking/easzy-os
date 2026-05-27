@@ -11,7 +11,7 @@ export default function BankPage() {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   
-  const filters = ["All", "Voice Notes", "Text Ideas", "Generated Posts"];
+  const filters = ["All", "Voice Notes", "Text Ideas", "Strategy Notes", "Generated Posts"];
 
   useEffect(() => {
     async function loadData() {
@@ -21,19 +21,22 @@ export default function BankPage() {
       // Fetch drafts (if any)
       const { data: draftsData } = await supabase.from('drafts').select('*').order('created_at', { ascending: false });
 
-      const formattedCaptures = (capturesData || []).map(c => ({
-        id: c.id,
-        type: c.type,
-        icon: c.type === 'Voice Note' ? 'mic' : 'edit_note',
-        date: new Date(c.created_at).toLocaleDateString(),
-        topic: 'Captured Thought',
-        platform: 'None',
-        excerpt: c.transcript,
-        color: c.type === 'Voice Note' ? 'bg-blue-500' : 'bg-orange-500',
-        bgLight: c.type === 'Voice Note' ? 'bg-blue-50' : 'bg-orange-50',
-        border: c.type === 'Voice Note' ? 'border-blue-100' : 'border-orange-100',
-        onClick: () => router.push(`/chat?capture_id=${c.id}`)
-      }));
+      const formattedCaptures = (capturesData || []).map(c => {
+        const isStrategy = c.transcript?.startsWith("[STRATEGY NOTE]");
+        return {
+          id: c.id,
+          type: isStrategy ? 'Strategy Note' : c.type,
+          icon: isStrategy ? 'description' : (c.type === 'Voice Note' ? 'mic' : 'edit_note'),
+          date: new Date(c.created_at).toLocaleDateString(),
+          topic: isStrategy ? c.transcript.split('\n')[0].replace('[STRATEGY NOTE] ', '') : 'Captured Thought',
+          platform: 'None',
+          excerpt: isStrategy ? c.transcript.substring(c.transcript.indexOf('\n\n') + 2) : c.transcript,
+          color: isStrategy ? 'bg-purple-500' : (c.type === 'Voice Note' ? 'bg-blue-500' : 'bg-orange-500'),
+          bgLight: isStrategy ? 'bg-purple-50' : (c.type === 'Voice Note' ? 'bg-blue-50' : 'bg-orange-50'),
+          border: isStrategy ? 'border-purple-100' : (c.type === 'Voice Note' ? 'border-blue-100' : 'border-orange-100'),
+          onClick: () => router.push(`/chat?capture_id=${c.id}`)
+        };
+      });
 
       const formattedDrafts = (draftsData || []).map(d => ({
         id: `draft-${d.id}`,
@@ -61,6 +64,7 @@ export default function BankPage() {
     const matchesFilter = activeFilter === "All" 
       || (activeFilter === "Voice Notes" && item.type === "Voice Note")
       || (activeFilter === "Text Ideas" && item.type === "Text Idea")
+      || (activeFilter === "Strategy Notes" && item.type === "Strategy Note")
       || (activeFilter === "Generated Posts" && item.type === "Generated Post");
 
     const searchLower = searchQuery.toLowerCase();

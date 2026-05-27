@@ -160,7 +160,7 @@ export default function CapturePage() {
 
       const { data: captureData, error: dbError } = await supabase
         .from("captures")
-        .insert([{ type: "URL Link", transcript: formattedTranscript }])
+        .insert([{ type: "URL Capture", transcript: formattedTranscript }])
         .select()
         .single();
 
