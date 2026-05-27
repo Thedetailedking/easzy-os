@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Idea Bank | Content OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .pro-tool-shadow {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "success-vibrant": "#22C55E",
+                      "on-primary-fixed": "#002109",
+                      "inverse-surface": "#213145",
+                      "on-tertiary-fixed": "#0d1c2f",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "outline": "#6e7b6c",
+                      "tertiary": "#4f5d72",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "primary-fixed-dim": "#62df7d",
+                      "primary-container": "#00873a",
+                      "on-surface": "#0b1c30",
+                      "on-background": "#0b1c30",
+                      "secondary-container": "#dae2fd",
+                      "on-primary-fixed-variant": "#005320",
+                      "on-secondary-fixed": "#131b2e",
+                      "surface-bright": "#f8f9ff",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#7ffc97",
+                      "on-surface-variant": "#3e4a3d",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#3a485c",
+                      "surface-dim": "#cbdbf5",
+                      "surface-variant": "#d3e4fe",
+                      "on-tertiary-container": "#fdfcff",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#bdcaba",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#f7fff2",
+                      "surface-container-high": "#dce9ff",
+                      "secondary-fixed": "#dae2fd",
+                      "on-error-container": "#93000a",
+                      "secondary": "#565e74",
+                      "inverse-primary": "#62df7d",
+                      "primary": "#006b2c",
+                      "tertiary-fixed": "#d5e3fd",
+                      "tertiary-fixed-dim": "#b9c7e0",
+                      "surface": "#f8f9ff",
+                      "surface-subtle": "#F9FAFB",
+                      "surface-tint": "#006e2d",
+                      "surface-main": "#FFFFFF",
+                      "surface-container": "#e5eeff",
+                      "midnight-void": "#020617",
+                      "background": "#f8f9ff",
+                      "surface-container-low": "#eff4ff",
+                      "error": "#ba1a1a",
+                      "tertiary-container": "#67758c",
+                      "border-subtle": "#E5E7EB",
+                      "on-secondary-container": "#5c647a",
+                      "on-secondary": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter-mobile": "16px",
+                      "base": "4px",
+                      "container-max": "1280px",
+                      "margin-desktop": "40px",
+                      "gutter-desktop": "24px",
+                      "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                      "headline-xl": ["Space Grotesk"],
+                      "headline-md": ["Space Grotesk"],
+                      "headline-lg-mobile": ["Space Grotesk"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg": ["Space Grotesk"],
+                      "label-sm": ["JetBrains Mono"],
+                      "label-md": ["JetBrains Mono"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-subtle min-h-screen font-body-md text-on-surface">
+<!-- Top AppBar (Content OS Shared Component Mapping) -->
+<header class="w-full top-0 sticky bg-surface dark:bg-on-background border-b border-border-subtle dark:border-outline-variant z-40">
+<div class="flex items-center justify-between px-margin-mobile md:px-margin-desktop h-16 w-full max-w-container-max mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:bg-surface-subtle transition-colors cursor-pointer p-2 rounded-full active:scale-95 duration-150">menu</span>
+<h1 class="font-headline-md text-headline-md font-bold text-on-background dark:text-surface">Idea Bank</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center gap-2 px-3 py-1.5 border border-border-subtle rounded-lg bg-surface-main">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-64" placeholder="Search archive..." type="text"/>
+</div>
+<div class="w-10 h-10 rounded-full border border-border-subtle overflow-hidden bg-surface-container">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a tech-focused African educator with a confident expression. The lighting is soft and editorial, using a high-key light mode aesthetic. The background is a minimalist, slightly blurred workspace with clean lines and a professional corporate modern vibe, emphasizing expertise and productivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuCtIIkIYylBaVU0jSofHzLBnZUWZU4dNpjUBIPbgvTMZUXqo8jqpmHub1KVGjz9yybrjIA1_LvuIv75prIDFA8Lnw7lDH014GCLjXMIw-WB8Bk_ttR7ILtN99hdaqEsWqYSzJv0510J_a1nJhx63ksYNiT8fYJ9-Uc7ZGjKZ7qSN5OP5uVgBkYK8yDh-N3LGfYmbVfmdz1x0ZFM5M_oPupBTu_RsUS1juAbJAidwpTc7DQiR9wQmKKCjQzdkbilePL6vV9hioPiYl"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pb-24 pt-6">
+<!-- Search Bar (Mobile Only) -->
+<div class="md:hidden mb-6">
+<div class="flex items-center gap-2 px-4 py-3 border border-border-subtle rounded-xl bg-surface-main focus-within:border-primary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full" placeholder="Search your ideas..." type="text"/>
+</div>
+</div>
+<!-- Filter Chips Section -->
+<div class="flex overflow-x-auto no-scrollbar gap-2 pb-6">
+<button class="flex-shrink-0 px-5 py-2 rounded-full border border-primary bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-all active:scale-95">All</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full border border-border-subtle bg-surface-main text-on-surface-variant font-label-md text-label-md hover:bg-surface-subtle transition-all active:scale-95">Voice</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full border border-border-subtle bg-surface-main text-on-surface-variant font-label-md text-label-md hover:bg-surface-subtle transition-all active:scale-95">Video</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full border border-border-subtle bg-surface-main text-on-surface-variant font-label-md text-label-md hover:bg-surface-subtle transition-all active:scale-95">Text</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full border border-border-subtle bg-surface-main text-on-surface-variant font-label-md text-label-md hover:bg-surface-subtle transition-all active:scale-95">Generated</button>
+<button class="flex-shrink-0 px-5 py-2 rounded-full border border-border-subtle bg-surface-main text-on-surface-variant font-label-md text-label-md hover:bg-surface-subtle transition-all active:scale-95">Interviews</button>
+</div>
+<!-- Content List -->
+<div class="space-y-4">
+<!-- Entry 1: Voice -->
+<div class="bg-surface-main border border-border-subtle rounded-xl p-5 flex flex-col md:flex-row gap-4 hover:border-primary/40 transition-colors group">
+<div class="w-12 h-12 flex-shrink-0 rounded-lg bg-surface-container-low flex items-center justify-center border border-border-subtle">
+<span class="material-symbols-outlined text-primary">mic</span>
+</div>
+<div class="flex-grow space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Thoughts on AI-assisted curriculum design for rural schools</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-70">2 days ago</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">Voice memo captured during the morning commute discussing the integration of offline LLMs for localized educational support...</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#Education</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#AI</span>
+</div>
+</div>
+<div class="flex md:flex-col justify-end gap-2 border-t md:border-t-0 md:border-l border-border-subtle pt-4 md:pt-0 md:pl-4">
+<button class="flex-1 md:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all">Reactivate</button>
+<button class="flex-1 md:flex-none px-4 py-2 border border-border-subtle rounded-lg font-label-md text-label-md hover:bg-surface-subtle active:scale-95 transition-all">View</button>
+</div>
+</div>
+<!-- Entry 2: Generated -->
+<div class="bg-surface-main border border-border-subtle rounded-xl p-5 flex flex-col md:flex-row gap-4 hover:border-primary/40 transition-colors group">
+<div class="w-12 h-12 flex-shrink-0 rounded-lg bg-primary-container flex items-center justify-center border border-border-subtle">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex-grow space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Draft: Scaling Fintech content across sub-Saharan Africa</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-70">4 days ago</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">AI-generated outline based on the "Nairobi Tech Summit" interview. Covers market penetration and regulatory hurdles.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#Fintech</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#LinkedIn</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#Strategy</span>
+</div>
+</div>
+<div class="flex md:flex-col justify-end gap-2 border-t md:border-t-0 md:border-l border-border-subtle pt-4 md:pt-0 md:pl-4">
+<button class="flex-1 md:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all">Reactivate</button>
+<button class="flex-1 md:flex-none px-4 py-2 border border-border-subtle rounded-lg font-label-md text-label-md hover:bg-surface-subtle active:scale-95 transition-all">View</button>
+</div>
+</div>
+<!-- Entry 3: Video -->
+<div class="bg-surface-main border border-border-subtle rounded-xl p-5 flex flex-col md:flex-row gap-4 hover:border-primary/40 transition-colors group">
+<div class="w-12 h-12 flex-shrink-0 rounded-lg bg-surface-container-low flex items-center justify-center border border-border-subtle overflow-hidden relative">
+<img alt="Video Thumbnail" class="absolute inset-0 w-full h-full object-cover opacity-30" data-alt="A high-resolution thumbnail for a tech interview video. The image shows a sleek, modern workspace with multiple monitors displaying lines of code and data visualizations. The lighting is dramatic but clean, with a corporate modern aesthetic featuring deep blacks and sharp whites, perfectly aligned with a professional Content OS productivity vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMmIR4VONlvqLYfAJzMK1stamioMKjIB85TRQWeud1OKk0D9_heUl2VgbaDL4-teS5pR2WwaCQkDTImsYARyiFFNbsRy7zi9oS-SCWmVOyNAxN_Ecdv0QBLkER7PU4mE_vbsQUefc8I4eOITmJjJI3xH7sKVljGa8BRSBVSTeY3dh197mPc22Cysmggk1bAlJCuHWAeiD1UUw8cMqQE_6ex8znS8jerPQDP330SWdUFV0HH7G8AHSeu-DlSa5paCMfdD26N7sR3CTs"/>
+<span class="material-symbols-outlined text-secondary relative z-10">video_library</span>
+</div>
+<div class="flex-grow space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Interview with Dr. Amadi on Future of Agri-Tech</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-70">1 week ago</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">Raw footage of the 45-minute deep dive into drone technology for sustainable farming in semi-arid regions.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#AgriTech</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#Interview</span>
+</div>
+</div>
+<div class="flex md:flex-col justify-end gap-2 border-t md:border-t-0 md:border-l border-border-subtle pt-4 md:pt-0 md:pl-4">
+<button class="flex-1 md:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all">Reactivate</button>
+<button class="flex-1 md:flex-none px-4 py-2 border border-border-subtle rounded-lg font-label-md text-label-md hover:bg-surface-subtle active:scale-95 transition-all">View</button>
+</div>
+</div>
+<!-- Entry 4: Text -->
+<div class="bg-surface-main border border-border-subtle rounded-xl p-5 flex flex-col md:flex-row gap-4 hover:border-primary/40 transition-colors group">
+<div class="w-12 h-12 flex-shrink-0 rounded-lg bg-surface-container-low flex items-center justify-center border border-border-subtle">
+<span class="material-symbols-outlined text-on-surface-variant">description</span>
+</div>
+<div class="flex-grow space-y-2">
+<div class="flex justify-between items-start">
+<h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Newsletter Script: The hidden cost of "Efficiency"</h3>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-70">Nov 12</span>
+</div>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">Critical analysis of productivity tools and their impact on deep work focus. Scripted for the November issue.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#Newsletter</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 bg-surface-container rounded text-on-secondary-container border border-border-subtle">#Philosophy</span>
+</div>
+</div>
+<div class="flex md:flex-col justify-end gap-2 border-t md:border-t-0 md:border-l border-border-subtle pt-4 md:pt-0 md:pl-4">
+<button class="flex-1 md:flex-none px-4 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 active:scale-95 transition-all">Reactivate</button>
+<button class="flex-1 md:flex-none px-4 py-2 border border-border-subtle rounded-lg font-label-md text-label-md hover:bg-surface-subtle active:scale-95 transition-all">View</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation (Content OS Shared Component Mapping) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-gutter-mobile bg-surface-container-lowest border-t border-border-subtle z-50">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="font-label-sm text-label-sm">Capture</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+<span class="font-label-sm text-label-sm">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-sm text-label-sm">Output</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-primary-fixed transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-label-sm text-label-sm">Events</span>
+</a>
+<!-- Bank is ACTIVE -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-all active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<span class="font-label-sm text-label-sm">Bank</span>
+</a>
+</nav>
+<!-- Micro-interactions Script -->
+<script>
+        // Simple search highlighting
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('border-primary');
+            });
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('border-primary');
+            });
+        });
+
+        // Filter chip selection toggle
+        const chips = document.querySelectorAll('button.rounded-full');
+        chips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                chips.forEach(c => {
+                    c.classList.remove('bg-primary', 'text-on-primary', 'border-primary');
+                    c.classList.add('bg-surface-main', 'text-on-surface-variant', 'border-border-subtle');
+                });
+                this.classList.remove('bg-surface-main', 'text-on-surface-variant', 'border-border-subtle');
+                this.classList.add('bg-primary', 'text-on-primary', 'border-primary');
+            });
+        });
+    </script>
+</body></html>

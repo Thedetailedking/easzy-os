@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Content OS - Capture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .visualizer-bar {
+            animation: bounce 1.2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { height: 8px; }
+            50% { height: 24px; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "outline-variant": "#bdcaba",
+                      "primary-fixed-dim": "#62df7d",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#dae2fd",
+                      "background": "#f8f9ff",
+                      "tertiary": "#4f5d72",
+                      "surface-subtle": "#F9FAFB",
+                      "midnight-void": "#020617",
+                      "success-vibrant": "#22C55E",
+                      "outline": "#6e7b6c",
+                      "surface-dim": "#cbdbf5",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-low": "#eff4ff",
+                      "secondary-fixed": "#dae2fd",
+                      "primary-container": "#00873a",
+                      "on-primary-fixed": "#002109",
+                      "surface-container-highest": "#d3e4fe",
+                      "on-tertiary-fixed-variant": "#3a485c",
+                      "on-error": "#ffffff",
+                      "on-surface": "#0b1c30",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "surface-container": "#e5eeff",
+                      "border-subtle": "#E5E7EB",
+                      "secondary": "#565e74",
+                      "tertiary-fixed": "#d5e3fd",
+                      "on-tertiary-container": "#fdfcff",
+                      "inverse-surface": "#213145",
+                      "primary": "#006b2c",
+                      "on-surface-variant": "#3e4a3d",
+                      "on-primary-fixed-variant": "#005320",
+                      "inverse-on-surface": "#eaf1ff",
+                      "surface-variant": "#d3e4fe",
+                      "surface-bright": "#f8f9ff",
+                      "inverse-primary": "#62df7d",
+                      "on-background": "#0b1c30",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#131b2e",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "on-secondary-container": "#5c647a",
+                      "on-tertiary-fixed": "#0d1c2f",
+                      "surface-container-high": "#dce9ff",
+                      "surface-main": "#FFFFFF",
+                      "tertiary-fixed-dim": "#b9c7e0",
+                      "on-primary-container": "#f7fff2",
+                      "tertiary-container": "#67758c",
+                      "surface": "#f8f9ff",
+                      "primary-fixed": "#7ffc97",
+                      "error": "#ba1a1a",
+                      "surface-tint": "#006e2d",
+                      "on-secondary-fixed-variant": "#3f465c"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "gutter-mobile": "16px",
+                      "container-max": "1280px",
+                      "gutter-desktop": "24px",
+                      "base": "4px",
+                      "margin-mobile": "20px",
+                      "margin-desktop": "40px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Space Grotesk"],
+                      "headline-xl": ["Space Grotesk"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["JetBrains Mono"],
+                      "label-sm": ["JetBrains Mono"],
+                      "headline-lg": ["Space Grotesk"],
+                      "body-md": ["Inter"],
+                      "body-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-background overflow-hidden">
+<!-- Desktop Side Navigation -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-midnight-void border-r border-outline-variant flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-headline-md font-headline-md font-bold text-primary-fixed">Content OS</h1>
+<p class="text-label-sm font-label-sm text-primary-fixed-dim/70">AI Educator Pro</p>
+</div>
+<nav class="flex-1 space-y-2 px-2">
+<!-- Capture is Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg border-l-4 border-primary transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="input">input</span>
+<span class="text-label-md font-label-md">Capture</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="text-label-md font-label-md">Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="smart_display">smart_display</span>
+<span class="text-label-md font-label-md">Output</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="text-label-md font-label-md">Events</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="text-label-md font-label-md">Bank</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+<div class="mt-4 pt-4 border-t border-outline-variant/30 flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<img alt="Content OS User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a focused male AI educator in a modern tech environment. He has a clean-cut appearance and is wearing a sleek charcoal blazer. The background is a soft-focus studio with minimalist tech equipment and warm ambient lighting. The overall aesthetic is professional, authoritative, and sophisticated, matching a high-end SaaS corporate identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8WNbksrWbeWRcuk-haGo_26VikKrLDgbHrcE0dXIh40nlvoYRZikkwSBmjPtQAAcolTaxZq6uQG-ttkXJ2bzHwqhw2sXTLqtjXW_P7AQSbFepUTFWsP_RFQEocePfy7QrR_iIG_YG0VBHGCBEL9TarZb5DwuiTcvILZlDhKLwmvAZs0vfNQ9nA8-f1BS0-eQ3o2zmEWcX9KOc3b6xewJmc1Fk12vaPnpN-AeZE9WkOsjzsSKwVt8ZX6E3fr9iJohwBS3DID6rCJ4J"/>
+</div>
+<div>
+<p class="text-label-md font-label-md text-primary-fixed">John Doe</p>
+<p class="text-[10px] text-surface-variant uppercase tracking-widest">Pro Tier</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-main flex justify-between items-center px-gutter-desktop w-full ml-0 z-40 border-b border-border-subtle">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary" data-icon="search">search</span>
+<input class="w-full bg-surface-subtle border border-border-subtle rounded-lg pl-10 pr-4 py-2 text-body-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Search ideas, logs, transcripts..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-secondary hover:text-primary cursor-pointer active:opacity-80 transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-secondary hover:text-primary cursor-pointer active:opacity-80 transition-colors" data-icon="help_outline">help_outline</span>
+<div class="h-8 w-[1px] bg-border-subtle mx-2"></div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-label-md font-label-md flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                New Project
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 h-screen overflow-y-auto px-margin-desktop py-margin-desktop">
+<div class="max-w-[1280px] mx-auto">
+<!-- Hero Heading -->
+<header class="mb-12">
+<h2 class="text-headline-xl font-headline-xl text-midnight-void mb-2">What should I work on today?</h2>
+<div class="flex items-center gap-3">
+<span class="flex items-center gap-1 text-label-md font-label-md text-primary bg-primary-container/10 px-3 py-1 rounded-full">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt" data-weight="fill">bolt</span>
+                        Active Session
+                    </span>
+<span class="text-body-md font-body-md text-secondary">Pick a capture mode to start training your AI model.</span>
+</div>
+</header>
+<!-- Capture Modes Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter-desktop mb-12">
+<!-- Voice Note Card -->
+<section class="bg-surface-main border border-midnight-void p-8 rounded-xl flex flex-col gap-6 group hover:border-primary transition-colors cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-surface-subtle rounded-lg border border-border-subtle text-midnight-void group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="mic">mic</span>
+</div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-widest">Live Capture</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-midnight-void mb-2">Voice Note</h3>
+<p class="text-body-md font-body-md text-secondary leading-relaxed">Record your lecture or thoughts. Content OS will transcribe and structure the data automatically.</p>
+</div>
+<!-- Audio Visualizer Mockup -->
+<div class="mt-4 flex items-end gap-1 h-12">
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.1s; height: 12px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.3s; height: 28px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.5s; height: 16px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.2s; height: 32px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.4s; height: 20px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.6s; height: 10px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.1s; height: 24px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.3s; height: 18px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.5s; height: 30px;"></div>
+<div class="visualizer-bar w-1 bg-primary" style="animation-delay: 0.7s; height: 14px;"></div>
+</div>
+<button class="mt-auto w-full py-3 border border-midnight-void text-midnight-void font-label-md hover:bg-midnight-void hover:text-white transition-all rounded-lg flex items-center justify-center gap-2">
+                        Start Recording
+                    </button>
+</section>
+<!-- Video Upload Card -->
+<section class="bg-surface-main border border-midnight-void p-8 rounded-xl flex flex-col gap-6 group hover:border-primary transition-colors cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-surface-subtle rounded-lg border border-border-subtle text-midnight-void group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="upload_file">upload_file</span>
+</div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-widest">Media Sync</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-midnight-void mb-2">Video Upload</h3>
+<p class="text-body-md font-body-md text-secondary leading-relaxed">Import MP4/MOV files. AI extracts context, visual elements, and speech for course creation.</p>
+</div>
+<!-- Progress Area Mockup -->
+<div class="mt-4 bg-surface-subtle border border-dashed border-border-subtle rounded-lg p-4 flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined text-secondary/40 text-[40px]" data-icon="cloud_upload">cloud_upload</span>
+<div class="w-full bg-border-subtle h-1 rounded-full mt-2">
+<div class="bg-primary h-full w-[45%] rounded-full"></div>
+</div>
+<span class="text-[10px] font-label-sm text-secondary">45% OF 1.2GB UPLOADED</span>
+</div>
+<button class="mt-auto w-full py-3 border border-midnight-void text-midnight-void font-label-md hover:bg-midnight-void hover:text-white transition-all rounded-lg flex items-center justify-center gap-2">
+                        Select Video File
+                    </button>
+</section>
+<!-- Text/Idea Entry Card -->
+<section class="bg-surface-main border border-midnight-void p-8 rounded-xl flex flex-col gap-6 group hover:border-primary transition-colors cursor-pointer relative lg:col-span-1">
+<div class="flex justify-between items-start">
+<div class="p-3 bg-surface-subtle rounded-lg border border-border-subtle text-midnight-void group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]" data-icon="edit_note">edit_note</span>
+</div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-widest">Brainstorm</span>
+</div>
+<div>
+<h3 class="text-headline-md font-headline-md text-midnight-void mb-2">Text &amp; Ideas</h3>
+<p class="text-body-md font-body-md text-secondary leading-relaxed">Paste outlines, raw notes, or long-form content. Perfect for structured curriculum planning.</p>
+</div>
+<!-- Large Text Area Mockup -->
+<div class="mt-2 flex-1 relative">
+<textarea class="w-full h-32 bg-surface-subtle border border-border-subtle rounded-lg p-3 text-body-sm text-secondary/60 resize-none font-mono focus:outline-none cursor-default" placeholder="Paste your markdown or raw text here..." readonly=""></textarea>
+<div class="absolute bottom-3 right-3 text-[10px] text-secondary/40 font-label-sm">CMD+V TO PASTE</div>
+</div>
+<button class="w-full py-3 border border-midnight-void text-midnight-void font-label-md hover:bg-midnight-void hover:text-white transition-all rounded-lg flex items-center justify-center gap-2">
+                        Open Full Editor
+                    </button>
+</section>
+</div>
+<!-- Recent Activity / Bento Style Secondary Content -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h4 class="text-headline-md font-headline-md text-midnight-void">Recent Captures</h4>
+<button class="text-label-md font-label-md text-primary flex items-center gap-1 hover:underline">
+                        View All
+                        <span class="material-symbols-outlined text-[18px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter-desktop">
+<!-- History Item 1 -->
+<div class="md:col-span-2 bg-surface-main border border-border-subtle p-6 rounded-lg hover:shadow-sm transition-all flex gap-4 items-center">
+<div class="w-16 h-16 rounded bg-surface-subtle border border-border-subtle overflow-hidden flex-shrink-0">
+<img alt="UI Background" class="w-full h-full object-cover" data-alt="A macro shot of a high-resolution digital display showing complex lines of code and data visualization nodes. The lighting is cool-toned with neon greens and deep blues reflecting off a glass surface. The composition is sleek and technical, emphasizing precision and modern software development aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy8DAMEsgr4oZyTmj34UOdRdARn4UUxQbYzJP__aCyIyd5hzThyvR9aNLO2kW8nzvKDY1E5-92jYZrTSp6AbHg-stFTbWmftx9h7oRAlWzf6cz6b0DHmaYbpeg91UJfbYM3_PpN_sPyFlZ1xFz5HYo0n24zkMhXlTytU2COuVuHdOC7-RqedMmmHPH9frfSbeu9ju2r0L27ZUdEBXSJBCa29KTxjtTv1lbGLUBsxQETcWk4r53HzkED6SKi0H8tWPbwklgmQMQAWEr"/>
+</div>
+<div class="flex-1">
+<span class="text-label-sm font-label-sm text-primary mb-1 block">VIDEO TRANSCRIBED</span>
+<h5 class="text-body-md font-bold text-midnight-void">Introduction to LLMs for Educators</h5>
+<p class="text-body-sm text-secondary">24 minutes • 3 modules generated</p>
+</div>
+<span class="material-symbols-outlined text-secondary" data-icon="more_vert">more_vert</span>
+</div>
+<!-- History Item 2 -->
+<div class="bg-surface-main border border-border-subtle p-6 rounded-lg hover:shadow-sm transition-all flex flex-col justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-secondary mb-2 block">IDEA DRAFT</span>
+<h5 class="text-body-md font-bold text-midnight-void">Neural Networks Prompting</h5>
+</div>
+<div class="flex items-center gap-2 mt-4">
+<div class="w-2 h-2 rounded-full bg-success-vibrant"></div>
+<span class="text-body-sm text-secondary">Ready to export</span>
+</div>
+</div>
+<!-- History Item 3 -->
+<div class="bg-surface-main border border-border-subtle p-6 rounded-lg hover:shadow-sm transition-all flex flex-col justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-error mb-2 block">VOICE LOG</span>
+<h5 class="text-body-md font-bold text-midnight-void">Curriculum Outline v2</h5>
+</div>
+<div class="flex items-center gap-2 mt-4">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="schedule">schedule</span>
+<span class="text-body-sm text-secondary">Awaiting cleanup</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Quick Capture Trigger (Suppressed on this task-focused screen as per rules, but showing for interactive feel if needed) -->
+<!-- Removed based on: "You MUST suppress the FAB on Settings, Profile, Details, and Transactional screens." -->
+<script>
+        // Micro-interactions for buttons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.98)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+
+        // Simulating visualizer activity on hover
+        const cards = document.querySelectorAll('section');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const bars = card.querySelectorAll('.visualizer-bar');
+                bars.forEach(bar => {
+                    bar.style.animationDuration = (Math.random() * 0.5 + 0.3) + 's';
+                });
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Idea Bank | Content OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#bdcaba",
+                        "primary-fixed-dim": "#62df7d",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "background": "#f8f9ff",
+                        "tertiary": "#4f5d72",
+                        "surface-subtle": "#F9FAFB",
+                        "midnight-void": "#020617",
+                        "success-vibrant": "#22C55E",
+                        "outline": "#6e7b6c",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#00873a",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "on-error": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "surface-container": "#e5eeff",
+                        "border-subtle": "#E5E7EB",
+                        "secondary": "#565e74",
+                        "tertiary-fixed": "#d5e3fd",
+                        "on-tertiary-container": "#fdfcff",
+                        "inverse-surface": "#213145",
+                        "primary": "#006b2c",
+                        "on-surface-variant": "#3e4a3d",
+                        "on-primary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-primary": "#62df7d",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-container-high": "#dce9ff",
+                        "surface-main": "#FFFFFF",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "on-primary-container": "#f7fff2",
+                        "tertiary": "#f8f9ff",
+                        "primary-fixed": "#7ffc97",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#006e2d",
+                        "on-secondary-fixed-variant": "#3f465c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter-mobile": "16px",
+                        "container-max": "1280px",
+                        "gutter-desktop": "24px",
+                        "base": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "headline-xl": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9ff;
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 16px;
+        }
+        .thin-stroke {
+            border: 1px solid #020617;
+        }
+    </style>
+</head>
+<body class="text-on-background antialiased">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-midnight-void dark:bg-midnight-void flex flex-col py-6 border-r border-outline-variant z-50">
+<div class="px-6 mb-10">
+<h1 class="text-headline-md font-headline-md font-bold text-primary-fixed">Content OS</h1>
+<p class="text-label-sm font-label-sm text-primary-fixed-dim/70">AI Educator Pro</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Capture -->
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="input">input</span>
+<span class="text-label-md font-label-md">Capture</span>
+</a>
+<!-- Chat -->
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="text-label-md font-label-md">Chat</span>
+</a>
+<!-- Output -->
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="smart_display">smart_display</span>
+<span class="text-label-md font-label-md">Output</span>
+</a>
+<!-- Events -->
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="text-label-md font-label-md">Events</span>
+</a>
+<!-- Bank (ACTIVE) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg border-l-4 border-primary scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+<span class="text-label-md font-label-md">Bank</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-6 pt-6 mt-auto border-t border-white/10 flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-midnight-void font-bold text-xs overflow-hidden">
+<img alt="Content OS User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a creative professional in a high-tech studio environment. The lighting is crisp and cinematic, emphasizing a focused and intelligent expression. The background features blurred digital interfaces and hardware, suggesting an expert AI educator or technologist. The overall color palette is cool with professional blues and sharp whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhoKDfhrB7_gJ9fUaNWOXM5lejnsqJvS5hl5LBgT1ebzW1oGMI38b3ILbx2TByktjjDkUfHIuz3747xWwqmy_okoXR2OPhBJb6JLET_ncS98M6t8LnUQWqyPyhejx_7cTOW0FDmbK8PZONxZc5T8BIbGNjpcUYuiU6lypBFNjo7rketSqRm0NRBEsh3DSdXQvGONsWFEINedSyuFI4AKYza42JnS_OiMFlmSgTIx0DO6fqt5c7m-4sCLwP2z2g0QyflsXQDrbsFRpW"/>
+</div>
+<div>
+<p class="text-label-sm font-label-sm text-primary-fixed">Kofi Mensah</p>
+<p class="text-[10px] text-primary-fixed-dim/50 font-label-sm">PRO PLAN</p>
+</div>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-main flex justify-between items-center px-gutter-desktop border-b border-border-subtle z-40">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary scale-90" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-subtle border border-border-subtle rounded-lg text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search Idea Bank..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined text-secondary hover:text-primary transition-colors" data-icon="help_outline">help_outline</button>
+</div>
+<div class="h-8 w-[1px] bg-border-subtle"></div>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary text-on-primary hover:opacity-90 active:opacity-80 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span class="text-label-md font-label-md">New Idea</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 px-gutter-desktop pb-12">
+<div class="max-w-[1280px] mx-auto">
+<!-- Header & Filter Chips -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Idea Bank &amp; History</h2>
+<p class="font-body-md text-body-md text-secondary">A persistent archive of your creative sparks and research captures.</p>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+<button class="px-4 py-2 bg-midnight-void text-white rounded-full text-label-md font-label-md flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="all_inclusive">all_inclusive</span> All
+                    </button>
+<button class="px-4 py-2 bg-surface-main border border-border-subtle text-secondary hover:border-primary hover:text-primary transition-colors rounded-full text-label-md font-label-md flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="mic">mic</span> Voice
+                    </button>
+<button class="px-4 py-2 bg-surface-main border border-border-subtle text-secondary hover:border-primary hover:text-primary transition-colors rounded-full text-label-md font-label-md flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="videocam">videocam</span> Video
+                    </button>
+<button class="px-4 py-2 bg-surface-main border border-border-subtle text-secondary hover:border-primary hover:text-primary transition-colors rounded-full text-label-md font-label-md flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="description">description</span> Text
+                    </button>
+<div class="w-[1px] h-8 bg-border-subtle mx-2"></div>
+<button class="px-4 py-2 bg-surface-main border border-border-subtle text-secondary hover:border-primary transition-colors rounded-full text-label-md font-label-md flex items-center gap-2 whitespace-nowrap">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span> More
+                    </button>
+</div>
+</div>
+<!-- Bento Grid of Ideas -->
+<div class="bento-grid">
+<!-- Card 1: Large Content Piece -->
+<div class="bg-surface-main thin-stroke p-6 flex flex-col justify-between group hover:shadow-lg transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-1 bg-secondary-container text-on-secondary-container rounded font-label-sm text-label-sm uppercase tracking-wider">Video Capture</span>
+<span class="text-label-sm text-secondary">2 hours ago</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3">AI in West African Agriculture: A Deep Dive</h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-4">
+                            Analyzed a 45-minute webinar regarding autonomous irrigation sensors deployed in northern Ghana. Key insights on low-power LoRaWAN networks...
+                        </p>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="font-label-sm text-label-sm text-secondary bg-surface-subtle px-2 py-0.5 border border-border-subtle rounded">#AgriTech</span>
+<span class="font-label-sm text-label-sm text-secondary bg-surface-subtle px-2 py-0.5 border border-border-subtle rounded">#Ghana</span>
+</div>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary font-label-md text-label-md rounded flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt">bolt</span> REACTIVATE
+                    </button>
+</div>
+<!-- Card 2: Voice Memo -->
+<div class="bg-surface-main thin-stroke p-6 flex flex-col justify-between group hover:shadow-lg transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded font-label-sm text-label-sm uppercase tracking-wider">Voice Memo</span>
+<span class="text-label-sm text-secondary">Yesterday</span>
+</div>
+<div class="bg-surface-subtle p-4 rounded mb-4 flex items-center gap-4">
+<button class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined" data-icon="play_arrow">play_arrow</span>
+</button>
+<div class="flex-1">
+<div class="h-1 bg-border-subtle rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/3"></div>
+</div>
+<p class="text-[10px] font-label-sm mt-1 text-secondary">0:42 / 2:15</p>
+</div>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3 italic">"Thoughts on curriculum scaling..."</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                            Recorded while walking. Core idea: Use LLMs to localize STEM examples to Lagos urban context.
+                        </p>
+</div>
+<button class="w-full py-3 mt-6 bg-primary text-on-primary font-label-md text-label-md rounded flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt">bolt</span> REACTIVATE
+                    </button>
+</div>
+<!-- Card 3: Image Capture -->
+<div class="bg-surface-main thin-stroke overflow-hidden flex flex-col group hover:shadow-lg transition-shadow duration-300">
+<div class="h-48 relative overflow-hidden">
+<img alt="Capture thumbnail" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500" data-alt="A detailed macro photograph of complex digital hardware and fiber optic cables glowing with soft green light. The setting is a sterile, high-tech server room with clean lines and minimal distractions. The lighting is low-key and moody, creating a professional and focused atmosphere. The visual style is sharp and modern, with a clear emphasis on high-performance technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBR8Wom01fgtQZTGoNK66SQqCa1uPIa2-TrqKmZza5nA2axwmXO0fZOsexjP3lpMJJ0jlrcgBY4ZvUym-M1-t9gRXlRfbglm0vkk5yn_dqgK2Sv6-6T9JXkp3oFtAnh8LJ4ylAVf2SDRyy7dQG25mPowfEHboXdNFVWQZ3GPQDoBFVqZZgYUiMPRwB--HPSopUZRjNRqDvXXDzOICJhFC5YUB77m9EiedAcy1FmOL46RskHfiUGou_bEf1I0l2lj1pZTD9MYHP0tCX1"/>
+<div class="absolute inset-0 bg-gradient-to-t from-midnight-void/60 to-transparent"></div>
+<div class="absolute bottom-3 left-3 text-white">
+<span class="font-label-sm text-[10px] uppercase bg-primary-container px-2 py-0.5 rounded">Reference Image</span>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Interface Moodboard</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Captured from 'Design Systems of 2024' collection. Focus on density and micro-interactions.</p>
+</div>
+<button class="w-full py-3 bg-primary text-on-primary font-label-md text-label-md rounded flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt">bolt</span> REACTIVATE
+                        </button>
+</div>
+</div>
+<!-- Card 4: Text Link -->
+<div class="bg-surface-main thin-stroke p-6 flex flex-col justify-between group hover:shadow-lg transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-1 bg-surface-container-high text-on-secondary-container rounded font-label-sm text-label-sm uppercase tracking-wider">Web Link</span>
+<span class="text-label-sm text-secondary">3 days ago</span>
+</div>
+<div class="border-l-4 border-primary pl-4 py-1 mb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Modern Pedagogical Frameworks</h3>
+<p class="font-label-sm text-label-sm text-primary">medium.com/@edu-future</p>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-4">
+                            Summary: Active learning beats passive consumption. Framework suggests 15-minute sprints followed by AI-mediated reflection sessions.
+                        </p>
+</div>
+<button class="w-full py-3 mt-6 bg-primary text-on-primary font-label-md text-label-md rounded flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt">bolt</span> REACTIVATE
+                    </button>
+</div>
+<!-- Card 5: Research Snippet -->
+<div class="bg-surface-main thin-stroke p-6 flex flex-col justify-between group hover:shadow-lg transition-shadow duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="px-2 py-1 bg-error-container text-on-error-container rounded font-label-sm text-label-sm uppercase tracking-wider">Urgent Ref</span>
+<span class="text-label-sm text-secondary">Oct 24</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-3">Stat: Internet Penetration in Nigeria</h3>
+<div class="bg-midnight-void text-primary-fixed p-4 mb-4 font-label-md text-[18px]">
+                            "55.4% as of Q1 2024"
+                        </div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Source: NCC Quarterly Report. Vital for the market entry slide in the new investor deck.</p>
+</div>
+<button class="w-full py-3 mt-6 bg-primary text-on-primary font-label-md text-label-md rounded flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[18px]" data-icon="bolt">bolt</span> REACTIVATE
+                    </button>
+</div>
+<!-- Card 6: Scribble -->
+<div class="bg-surface-main thin-stroke p-6 flex flex-col justify-between group border-dashed border-2 border-outline opacity-70 hover:opacity-100 transition-all duration-300">
+<div class="flex flex-col items-center justify-center h-full py-10 text-center">
+<span class="material-symbols-outlined text-4xl text-outline mb-4" data-icon="auto_awesome">auto_awesome</span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">New Brainstorm?</h3>
+<p class="font-body-sm text-body-sm text-secondary">Ready to capture the next big move.</p>
+</div>
+<button class="w-full py-3 bg-surface-subtle text-on-surface border border-midnight-void font-label-md text-label-md rounded flex items-center justify-center gap-2 hover:bg-midnight-void hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="add_circle">add_circle</span> QUICK ADD
+                    </button>
+</div>
+</div>
+<!-- Footer Meta -->
+<div class="mt-12 py-6 border-t border-border-subtle flex justify-between items-center">
+<p class="text-label-sm text-secondary">Showing 42 archived ideas across 3 categories</p>
+<div class="flex gap-4">
+<button class="text-label-sm font-label-sm text-primary hover:underline">Export CSV</button>
+<button class="text-label-sm font-label-sm text-primary hover:underline">Bulk Archive</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Micro-interaction Script -->
+<script>
+        // Simple scale effect for cards on hover
+        document.querySelectorAll('.thin-stroke').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-4px)';
+                card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Filter toggle effect
+        const filterBtns = document.querySelectorAll('button[class*="rounded-full"]');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    if(b.classList.contains('bg-midnight-void')) {
+                        b.classList.remove('bg-midnight-void', 'text-white');
+                        b.classList.add('bg-surface-main', 'border', 'border-border-subtle', 'text-secondary');
+                    }
+                });
+                btn.classList.remove('bg-surface-main', 'border', 'border-border-subtle', 'text-secondary');
+                btn.classList.add('bg-midnight-void', 'text-white');
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Content OS - Build Launch Campaign</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#ffdad6",
+            "outline-variant": "#bdcaba",
+            "primary-fixed-dim": "#62df7d",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#dae2fd",
+            "background": "#f8f9ff",
+            "tertiary": "#4f5d72",
+            "surface-subtle": "#F9FAFB",
+            "midnight-void": "#020617",
+            "success-vibrant": "#22C55E",
+            "outline": "#6e7b6c",
+            "surface-dim": "#cbdbf5",
+            "on-tertiary": "#ffffff",
+            "surface-container-low": "#eff4ff",
+            "secondary-fixed": "#dae2fd",
+            "primary-container": "#00873a",
+            "on-primary-fixed": "#002109",
+            "surface-container-highest": "#d3e4fe",
+            "on-tertiary-fixed-variant": "#3a485c",
+            "on-error": "#ffffff",
+            "on-surface": "#0b1c30",
+            "secondary-fixed-dim": "#bec6e0",
+            "surface-container": "#e5eeff",
+            "border-subtle": "#E5E7EB",
+            "secondary": "#565e74",
+            "tertiary-fixed": "#d5e3fd",
+            "on-tertiary-container": "#fdfcff",
+            "inverse-surface": "#213145",
+            "primary": "#006b2c",
+            "on-surface-variant": "#3e4a3d",
+            "on-primary-fixed-variant": "#005320",
+            "inverse-on-surface": "#eaf1ff",
+            "surface-variant": "#d3e4fe",
+            "surface-bright": "#f8f9ff",
+            "inverse-primary": "#62df7d",
+            "on-background": "#0b1c30",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#131b2e",
+            "on-error-container": "#93000a",
+            "on-primary": "#ffffff",
+            "on-secondary-container": "#5c647a",
+            "on-tertiary-fixed": "#0d1c2f",
+            "surface-container-high": "#dce9ff",
+            "surface-main": "#FFFFFF",
+            "tertiary-fixed-dim": "#b9c7e0",
+            "on-primary-container": "#f7fff2",
+            "tertiary-container": "#67758c",
+            "surface": "#f8f9ff",
+            "primary-fixed": "#7ffc97",
+            "error": "#ba1a1a",
+            "surface-tint": "#006e2d",
+            "on-secondary-fixed-variant": "#3f465c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "gutter-mobile": "16px",
+            "container-max": "1280px",
+            "gutter-desktop": "24px",
+            "base": "4px",
+            "margin-mobile": "20px",
+            "margin-desktop": "40px"
+          },
+          "fontFamily": {
+            "headline-md": ["Space Grotesk"],
+            "headline-xl": ["Space Grotesk"],
+            "body-lg": ["Inter"],
+            "headline-lg-mobile": ["Space Grotesk"],
+            "label-md": ["JetBrains Mono"],
+            "label-sm": ["JetBrains Mono"],
+            "headline-lg": ["Space Grotesk"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+            "headline-xl": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body { background-color: #f8f9ff; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+    .stroke-thin { border: 1px solid #E5E7EB; }
+  </style>
+</head>
+<body class="font-body-md text-on-surface">
+<!-- Side Navigation Anchor -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-midnight-void dark:bg-midnight-void border-r border-outline-variant flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<div class="text-headline-md font-headline-md font-bold text-primary-fixed">Content OS</div>
+<div class="text-label-sm font-label-sm text-primary-fixed-dim opacity-70">AI Educator Pro</div>
+</div>
+<nav class="flex-1 px-3 space-y-1">
+<!-- Capture: Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg border-l-4 border-primary transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">input</span>
+<span class="text-label-md font-label-md">Capture</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="text-label-md font-label-md">Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+<span class="text-label-md font-label-md">Output</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-label-md font-label-md">Events</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-label-md font-label-md">Bank</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto pt-6 border-t border-outline-variant/20 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary-fixed/30 bg-primary-container">
+<img alt="Content OS User Profile" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a creative professional in a high-tech studio environment. The lighting is sophisticated and directional, highlighting textures and clean lines. The overall aesthetic is minimalist and corporate modern with a focused, authoritative mood. High-quality editorial style with neutral tones and a hint of primary green in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0RzfhkNOb7fP9M4dBmj8z_ZWUIRd5JkQZ3639B6naz9r7hpgJ5XGP_4ie6syA3RaPgeomuCwoq8UKu-kFuo4JEh53cajiSNozZmy0SEcK94JYz-U7FfUEQNcQtXaH1HZM4Gmd1ORjESqYB21bAx5fQ37TUSaUdpTUPcvc_pSDV-59-KnGo5GCgF5OeKtsP09pkkyn_5jskiVUeKtQ7P_EB_tLsOkuR8KpDGOe09N-aByKAkCd5lO_QxQHWP8dHZ6uZfNPtGNrbzHf"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-label-md font-label-md text-primary-fixed truncate">A. Ibrahim</p>
+<p class="text-label-sm font-label-sm text-surface-variant/60 truncate">Premium Plan</p>
+</div>
+</div>
+</aside>
+<!-- Top App Bar Anchor -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-main dark:bg-surface-main border-b border-border-subtle flex justify-between items-center px-gutter-desktop z-40">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-subtle border border-border-subtle rounded-lg text-body-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="Search campaign assets..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-secondary hover:bg-surface-subtle rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-secondary hover:bg-surface-subtle rounded-full transition-colors active:opacity-80">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-px bg-border-subtle mx-2"></div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-label-md font-label-md flex items-center gap-2 hover:opacity-90 transition-all active:scale-95">
+<span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+        Launch
+      </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-gutter-desktop min-h-[calc(100vh-64px)]">
+<div class="max-w-container-max mx-auto">
+<!-- Header Section -->
+<div class="mb-10">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Build Launch Campaign</h1>
+<p class="font-body-md text-body-md text-secondary max-w-2xl">Define your educational product and generate a structured 4-part launch sequence optimized for African AI markets.</p>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Left: Multi-column Form Layout -->
+<div class="col-span-12 lg:col-span-7 space-y-8">
+<section class="bg-surface-main stroke-thin p-8 rounded-lg">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">edit_note</span>
+              Project Architecture
+            </h2>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="col-span-2">
+<label class="block text-label-md font-label-md text-secondary mb-2">Project Name</label>
+<input class="w-full px-4 py-3 bg-surface-subtle border border-border-subtle rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. AI-Powered Curriculum Masterclass" type="text"/>
+</div>
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-md font-label-md text-secondary mb-2">Primary Goal</label>
+<select class="w-full px-4 py-3 bg-surface-subtle border border-border-subtle rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all">
+<option>Pre-order Sales</option>
+<option>Lead Generation</option>
+<option>Community Growth</option>
+<option>Beta Testing</option>
+</select>
+</div>
+<div class="col-span-2 md:col-span-1">
+<label class="block text-label-md font-label-md text-secondary mb-2">Core Value Prop</label>
+<input class="w-full px-4 py-3 bg-surface-subtle border border-border-subtle rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="e.g. Save 20 hours/week on lesson planning" type="text"/>
+</div>
+<div class="col-span-2">
+<label class="block text-label-md font-label-md text-secondary mb-2">What it does (The Solution)</label>
+<textarea class="w-full px-4 py-3 bg-surface-subtle border border-border-subtle rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="Describe how your AI tool or course solves the user's pain points..." rows="3"></textarea>
+</div>
+<div class="col-span-2">
+<label class="block text-label-md font-label-md text-secondary mb-2">Who it's for (The Audience)</label>
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-primary-container/20 text-on-primary-container px-3 py-1 rounded-full text-label-sm font-label-sm border border-primary-container/30">K-12 Teachers</span>
+<span class="bg-primary-container/20 text-on-primary-container px-3 py-1 rounded-full text-label-sm font-label-sm border border-primary-container/30">EdTech Founders</span>
+<span class="bg-surface-subtle text-secondary px-3 py-1 rounded-full text-label-sm font-label-sm border border-border-subtle">+ Add Target</span>
+</div>
+<input class="w-full px-4 py-3 bg-surface-subtle border border-border-subtle rounded-lg font-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="Describe your ideal student/customer..." type="text"/>
+</div>
+</div>
+<div class="pt-4 flex items-center justify-between">
+<button class="text-secondary hover:text-primary text-label-md font-label-md flex items-center gap-2" type="button">
+<span class="material-symbols-outlined">restart_alt</span>
+                  Clear Form
+                </button>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-lg font-headline-md text-label-md flex items-center gap-3 hover:opacity-90 transition-transform active:scale-95 shadow-sm" type="button">
+<span class="material-symbols-outlined">auto_awesome</span>
+                  Generate Sequence
+                </button>
+</div>
+</form>
+</section>
+<!-- Bonus: Aesthetic Content Preview -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-midnight-void p-6 rounded-lg text-primary-fixed">
+<span class="material-symbols-outlined mb-4">insights</span>
+<p class="text-label-sm font-label-sm uppercase tracking-widest opacity-60">Market Fit Score</p>
+<p class="text-headline-md font-headline-md">92%</p>
+<p class="text-body-sm mt-2 opacity-80">Highly relevant for the West African STEM educator segment.</p>
+</div>
+<div class="bg-surface-main stroke-thin p-6 rounded-lg">
+<span class="material-symbols-outlined mb-4 text-primary">schedule</span>
+<p class="text-label-sm font-label-sm uppercase tracking-widest text-secondary">Estimated Build Time</p>
+<p class="text-headline-md font-headline-md">45 Mins</p>
+<p class="text-body-sm mt-2 text-secondary">AI handles the heavy lifting of copy &amp; structure.</p>
+</div>
+</div>
+</div>
+<!-- Right: Generated 4-part sequence Sidebar -->
+<div class="col-span-12 lg:col-span-5">
+<div class="sticky top-24 space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md">The Sequence</h3>
+<span class="text-label-sm font-label-sm px-2 py-1 bg-success-vibrant/10 text-success-vibrant border border-success-vibrant/20 rounded">Ready to Export</span>
+</div>
+<div class="space-y-4 custom-scrollbar max-h-[716px] overflow-y-auto pr-2">
+<!-- Card 1: The Hook -->
+<div class="bg-surface-main stroke-thin p-5 rounded-lg border-l-4 border-l-primary group hover:border-primary transition-all cursor-pointer">
+<div class="flex items-start justify-between mb-3">
+<div class="w-8 h-8 rounded bg-primary/10 text-primary flex items-center justify-center font-label-md">01</div>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<h4 class="font-headline-md text-[18px] mb-2">The Awareness Hook</h4>
+<p class="text-body-sm text-secondary line-clamp-2">"Attention educators: AI isn't coming for your job, it's coming to take your paperwork away. Here is how..."</p>
+<div class="mt-4 flex gap-2">
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">EMAIL</span>
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">LINKEDIN</span>
+</div>
+</div>
+<!-- Card 2: The Logic -->
+<div class="bg-surface-main stroke-thin p-5 rounded-lg border-l-4 border-l-primary/40 group hover:border-primary transition-all cursor-pointer">
+<div class="flex items-start justify-between mb-3">
+<div class="w-8 h-8 rounded bg-primary/10 text-primary flex items-center justify-center font-label-md">02</div>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<h4 class="font-headline-md text-[18px] mb-2">The Solution Logic</h4>
+<p class="text-body-sm text-secondary line-clamp-2">Detailed breakdown of the AI Educator methodology. Demonstrating the 'Content OS' efficiency model.</p>
+<div class="mt-4 flex gap-2">
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">THREAD</span>
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">VIDEO</span>
+</div>
+</div>
+<!-- Card 3: The Proof -->
+<div class="bg-surface-main stroke-thin p-5 rounded-lg border-l-4 border-l-primary/40 group hover:border-primary transition-all cursor-pointer">
+<div class="flex items-start justify-between mb-3">
+<div class="w-8 h-8 rounded bg-primary/10 text-primary flex items-center justify-center font-label-md">03</div>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<h4 class="font-headline-md text-[18px] mb-2">Social Proof &amp; Trust</h4>
+<p class="text-body-sm text-secondary line-clamp-2">Case studies from early adopters in Nairobi and Lagos. Showcasing real-world time-saving metrics.</p>
+<div class="mt-4 flex gap-2">
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">EMAIL</span>
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">INSTAGRAM</span>
+</div>
+</div>
+<!-- Card 4: The Offer -->
+<div class="bg-surface-main stroke-thin p-5 rounded-lg border-l-4 border-l-primary/40 group hover:border-primary transition-all cursor-pointer">
+<div class="flex items-start justify-between mb-3">
+<div class="w-8 h-8 rounded bg-primary/10 text-primary flex items-center justify-center font-label-md">04</div>
+<span class="material-symbols-outlined text-secondary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+</div>
+<h4 class="font-headline-md text-[18px] mb-2">The Irresistible Offer</h4>
+<p class="text-body-sm text-secondary line-clamp-2">Direct call to action. 24-hour early bird pricing for the AI Curriculum Masterclass. Scarcity &amp; urgency.</p>
+<div class="mt-4 flex gap-2">
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">SALES PAGE</span>
+<span class="text-[10px] font-label-md px-2 py-0.5 bg-surface-subtle border border-border-subtle rounded">SMS</span>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-midnight-void text-white rounded-lg font-label-md flex items-center justify-center gap-3 hover:bg-on-surface transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined">file_download</span>
+              Export All Assets (.zip)
+            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Decorative Element (Atmospheric) -->
+<div class="fixed top-0 right-0 -z-10 w-1/2 h-1/2 bg-gradient-to-bl from-primary/5 to-transparent pointer-events-none"></div>
+<script>
+    // Lightweight interaction for card selection
+    document.querySelectorAll('.group.cursor-pointer').forEach(card => {
+      card.addEventListener('click', () => {
+        // Reset others
+        document.querySelectorAll('.group.cursor-pointer').forEach(c => {
+          c.classList.remove('border-l-primary');
+          c.classList.add('border-l-primary/40');
+        });
+        // Highlight active
+        card.classList.remove('border-l-primary/40');
+        card.classList.add('border-l-primary');
+      });
+    });
+
+    // Simple scroll behavior for top app bar
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 20) {
+        header.classList.add('shadow-sm');
+      } else {
+        header.classList.remove('shadow-sm');
+      }
+    });
+  </script>
+</body></html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings &amp; Voice Config | Content OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        h1, h2, h3, h4, .font-headline {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #006b2c;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .custom-slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #006b2c;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#bdcaba",
+                        "primary-fixed-dim": "#62df7d",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "background": "#f8f9ff",
+                        "tertiary": "#4f5d72",
+                        "surface-subtle": "#F9FAFB",
+                        "midnight-void": "#020617",
+                        "success-vibrant": "#22C55E",
+                        "outline": "#6e7b6c",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#00873a",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "on-error": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "surface-container": "#e5eeff",
+                        "border-subtle": "#E5E7EB",
+                        "secondary": "#565e74",
+                        "tertiary-fixed": "#d5e3fd",
+                        "on-tertiary-container": "#fdfcff",
+                        "inverse-surface": "#213145",
+                        "primary": "#006b2c",
+                        "on-surface-variant": "#3e4a3d",
+                        "on-primary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-primary": "#62df7d",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-container-high": "#dce9ff",
+                        "surface-main": "#FFFFFF",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "on-primary-container": "#f7fff2",
+                        "tertiary-container": "#67758c",
+                        "surface": "#f8f9ff",
+                        "primary-fixed": "#7ffc97",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#006e2d",
+                        "on-secondary-fixed-variant": "#3f465c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter-mobile": "16px",
+                        "container-max": "1280px",
+                        "gutter-desktop": "24px",
+                        "base": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "headline-xl": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background antialiased overflow-x-hidden">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-midnight-void border-r border-outline-variant flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-headline-md font-headline-md font-bold text-primary-fixed">Content OS</h1>
+<p class="text-label-sm font-label-sm text-primary-fixed-dim opacity-70">AI Educator Pro</p>
+</div>
+<nav class="flex-1 space-y-2 px-2">
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">input</span>
+<span class="text-label-md font-label-md">Capture</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="text-label-md font-label-md">Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+<span class="text-label-md font-label-md">Output</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-label-md font-label-md">Events</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:text-surface-bright hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="text-label-md font-label-md">Bank</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg border-l-4 border-primary shadow-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-label-md font-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-6 flex items-center gap-3 border-t border-outline-variant/20 pt-6">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden border border-primary/30">
+<img alt="Content OS User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a modern AI educator in a clean, high-end office setting. The lighting is bright and editorial, reflecting a minimalist and authoritative persona. The overall aesthetic is professional SaaS with a crisp, high-performance feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYBWL40vXfc9b7qNi1bXPz9jyoN641B_ihwQXqHXDVNTk5iAHYuHhcoeBBb010huZiDy2cBPd5LMBO2iz5W-58Mv0EstSqn-nLbWp3GmBCKUmDBOlX7fQ3NnD2--Sg8BRpMKfur4s8vDsmN7peubphUVd25-CZ58kPQpNwXLUJyc7Xd6SbrjmESKhf1DRXnCMi1Eym8tbcEtR3wrE9cuqfFZcmvQCM-bWRAoOi1iW9Rb1JGVNMNFIVbHLi9Z1ro_YjCxEs6RYmdImq"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md text-surface-bright">Kojo Mensah</span>
+<span class="text-label-sm font-label-sm text-surface-variant">Admin Account</span>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-main flex justify-between items-center px-gutter-desktop z-40 border-b border-border-subtle">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-subtle border border-border-subtle rounded-lg text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search config, templates, or voice..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="material-symbols-outlined text-secondary hover:text-primary transition-colors cursor-pointer active:opacity-80">notifications</button>
+<button class="material-symbols-outlined text-secondary hover:text-primary transition-colors cursor-pointer active:opacity-80">help_outline</button>
+<div class="h-8 w-px bg-border-subtle"></div>
+<span class="text-label-md font-label-md text-secondary uppercase tracking-wider">Settings / Voice Config</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen bg-surface-subtle p-gutter-desktop">
+<div class="max-w-container-max mx-auto space-y-10">
+<!-- Page Header -->
+<section class="mb-10 flex justify-between items-end">
+<div class="space-y-2">
+<h2 class="text-headline-lg font-headline-lg text-on-surface">Voice &amp; Profile Configuration</h2>
+<p class="text-body-md font-body-md text-secondary max-w-2xl">Refine your AI identity. These parameters define how Content OS generates, captures, and structures your educational content across all platforms.</p>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2 border border-outline text-secondary font-label-md rounded-lg hover:bg-surface-dim transition-all">Discard Changes</button>
+<button class="px-8 py-2 bg-primary text-on-primary font-label-md rounded-lg shadow-md hover:opacity-90 active:scale-95 transition-all">Save Profile</button>
+</div>
+</section>
+<!-- Bento Grid Settings -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Identity Card (Large) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-main border border-border-subtle rounded-xl p-6 hover:border-primary transition-colors">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">badge</span>
+<h3 class="text-headline-md font-headline-md">Core Identity</h3>
+</div>
+<span class="mono text-label-sm text-primary-container bg-primary-container/10 px-3 py-1 rounded">MASTER_PROFILE_V2</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<div>
+<label class="text-label-sm font-label-sm text-outline block mb-2">Display Name</label>
+<input class="w-full bg-surface-subtle border border-border-subtle p-3 font-body-md rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="Kojo Mensah"/>
+</div>
+<div>
+<label class="text-label-sm font-label-sm text-outline block mb-2">Primary Role</label>
+<select class="w-full bg-surface-subtle border border-border-subtle p-3 font-body-md rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all">
+<option selected="">AI Educator &amp; Tech Consultant</option>
+<option>SaaS Content Strategist</option>
+<option>Technical Product Manager</option>
+</select>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="text-label-sm font-label-sm text-outline block mb-2">Positioning Statement</label>
+<textarea class="w-full bg-surface-subtle border border-border-subtle p-3 font-body-md rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none" rows="4">Democratizing AI literacy for African tech professionals through high-density, actionable education.</textarea>
+</div>
+</div>
+</div>
+</div>
+<!-- Niche & Audience Card -->
+<div class="col-span-12 lg:col-span-4 bg-surface-main border border-border-subtle rounded-xl p-6 hover:border-primary transition-colors">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">target</span>
+<h3 class="text-headline-md font-headline-md">Target Matrix</h3>
+</div>
+<div class="space-y-6">
+<div>
+<label class="text-label-sm font-label-sm text-outline block mb-2">Primary Niche</label>
+<div class="flex flex-wrap gap-2">
+<span class="mono px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[12px] flex items-center gap-1">AI_LITERACY <span class="material-symbols-outlined text-[14px]">close</span></span>
+<span class="mono px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-[12px] flex items-center gap-1">TECH_ED <span class="material-symbols-outlined text-[14px]">close</span></span>
+<button class="mono px-3 py-1 border border-dashed border-outline text-outline rounded-full text-[12px] hover:bg-surface-subtle">+ ADD_TAG</button>
+</div>
+</div>
+<div>
+<label class="text-label-sm font-label-sm text-outline block mb-2">Audience Description</label>
+<p class="text-body-sm text-secondary bg-surface-subtle p-4 rounded-lg border border-border-subtle/50 italic">
+                                "Mid-career professionals in Accra and Lagos, looking to leverage LLMs to automate manual workflows."
+                            </p>
+</div>
+</div>
+</div>
+<!-- Voice Dynamics (Sliders) -->
+<div class="col-span-12 lg:col-span-5 bg-surface-main border border-border-subtle rounded-xl p-6 hover:border-primary transition-colors">
+<div class="flex items-center gap-3 mb-8">
+<span class="material-symbols-outlined text-primary">equalizer</span>
+<h3 class="text-headline-md font-headline-md">Voice Dynamics</h3>
+</div>
+<div class="space-y-10">
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="text-label-md font-label-md text-on-surface">Tone (Clinical vs. Emotive)</label>
+<span class="mono text-label-sm text-primary font-bold">75 / 100</span>
+</div>
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer custom-slider" max="100" min="0" type="range" value="75"/>
+<div class="flex justify-between text-[10px] mono text-outline">
+<span>ANALYTICAL</span>
+<span>PASSIONATE</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="text-label-md font-label-md text-on-surface">Rawness (Polished vs. Rough)</label>
+<span class="mono text-label-sm text-primary font-bold">32 / 100</span>
+</div>
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer custom-slider" max="100" min="0" type="range" value="32"/>
+<div class="flex justify-between text-[10px] mono text-outline">
+<span>EDITORIAL</span>
+<span>AUTHENTIC</span>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center">
+<label class="text-label-md font-label-md text-on-surface">Density (Simple vs. Complex)</label>
+<span class="mono text-label-sm text-primary font-bold">88 / 100</span>
+</div>
+<input class="w-full h-2 bg-surface-variant rounded-lg appearance-none cursor-pointer custom-slider" max="100" min="0" type="range" value="88"/>
+<div class="flex justify-between text-[10px] mono text-outline">
+<span>ACCESSIBLE</span>
+<span>EXPERT</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Example Content / Feed -->
+<div class="col-span-12 lg:col-span-7 bg-surface-main border border-border-subtle rounded-xl p-6 hover:border-primary transition-colors">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">article</span>
+<h3 class="text-headline-md font-headline-md">LinkedIn Training Data</h3>
+</div>
+<button class="text-primary font-label-sm hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">sync</span> SCAN_FEED
+                        </button>
+</div>
+<div class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+<!-- Post 1 -->
+<div class="p-4 border border-border-subtle rounded-lg bg-surface-subtle group hover:bg-white transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="mono text-[10px] text-secondary">POST_REF_8923</span>
+</div>
+<span class="text-[10px] text-outline italic">Analyzed 2 days ago</span>
+</div>
+<p class="text-body-sm text-on-surface line-clamp-3">AI isn't coming for your job; the person who knows how to prompt is. In Accra, we're seeing a shift from manual data entry to LLM-driven synthesis. Here's how to stay ahead...</p>
+<div class="mt-3 flex gap-4">
+<span class="text-[10px] mono text-primary">Engagement: HIGH</span>
+<span class="text-[10px] mono text-primary">Tone: Authoritative</span>
+</div>
+</div>
+<!-- Post 2 -->
+<div class="p-4 border border-border-subtle rounded-lg bg-surface-subtle group hover:bg-white transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="mono text-[10px] text-secondary">POST_REF_8924</span>
+</div>
+<span class="text-[10px] text-outline italic">Analyzed 5 days ago</span>
+</div>
+<p class="text-body-sm text-on-surface line-clamp-3">The "Rawness" of content is what builds trust. People don't want ChatGPT-generated fluff. They want your unique perspective, your scars, and your wins.</p>
+<div class="mt-3 flex gap-4">
+<span class="text-[10px] mono text-primary">Engagement: MED</span>
+<span class="text-[10px] mono text-primary">Tone: Strategic</span>
+</div>
+</div>
+<!-- Post 3 -->
+<div class="p-4 border border-border-subtle rounded-lg bg-surface-subtle group hover:bg-white transition-all cursor-pointer">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-white" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="mono text-[10px] text-secondary">POST_REF_8925</span>
+</div>
+<span class="text-[10px] text-outline italic">Analyzed 1 week ago</span>
+</div>
+<p class="text-body-sm text-on-surface line-clamp-3">Stop treating AI as a search engine. Start treating it as a reasoning engine. The difference is 10x productivity.</p>
+<div class="mt-3 flex gap-4">
+<span class="text-[10px] mono text-primary">Engagement: HIGH</span>
+<span class="text-[10px] mono text-primary">Tone: Direct</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Advanced Config Footer -->
+<section class="mt-12 p-8 bg-midnight-void rounded-2xl overflow-hidden relative">
+<div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="space-y-2">
+<h4 class="text-headline-md font-headline-md text-primary-fixed">Deep Engine Configuration</h4>
+<p class="text-body-md text-surface-variant max-w-xl">Configure specific LLM parameters and API keys for content synthesis and voice cloning modules.</p>
+</div>
+<button class="px-10 py-4 bg-primary-container text-on-primary-container font-headline-md rounded-lg hover:bg-primary transition-all active:scale-95 flex items-center gap-3">
+<span class="material-symbols-outlined">settings_suggest</span>
+                        Open Advanced Panel
+                    </button>
+</div>
+<!-- Subtle background pattern -->
+<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#62df7d 0.5px, transparent 0.5px); background-size: 20px 20px;"></div>
+</section>
+</div>
+</main>
+<script>
+        // Micro-interactions for sliders
+        const sliders = document.querySelectorAll('input[type="range"]');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const valueDisplay = e.target.parentElement.querySelector('.font-bold');
+                if (valueDisplay) {
+                    valueDisplay.textContent = `${e.target.value} / 100`;
+                }
+            });
+        });
+
+        // Toggle hover effect on cards
+        const cards = document.querySelectorAll('.bg-surface-main');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('shadow-xl');
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('shadow-xl');
+                card.style.transform = 'translateY(0px)';
+            });
+            card.style.transition = 'all 0.3s ease';
+        });
+    </script>
+</body></html>

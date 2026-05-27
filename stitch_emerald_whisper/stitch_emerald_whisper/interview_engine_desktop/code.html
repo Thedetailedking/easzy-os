@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Interview Engine | Content OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #E5E7EB;
+            border-radius: 2px;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#ffdad6",
+                        "outline-variant": "#bdcaba",
+                        "primary-fixed-dim": "#62df7d",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "background": "#f8f9ff",
+                        "tertiary": "#4f5d72",
+                        "surface-subtle": "#F9FAFB",
+                        "midnight-void": "#020617",
+                        "success-vibrant": "#22C55E",
+                        "outline": "#6e7b6c",
+                        "surface-dim": "#cbdbf5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#00873a",
+                        "on-primary-fixed": "#002109",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "on-error": "#ffffff",
+                        "on-surface": "#0b1c30",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "surface-container": "#e5eeff",
+                        "border-subtle": "#E5E7EB",
+                        "secondary": "#565e74",
+                        "tertiary-fixed": "#d5e3fd",
+                        "on-tertiary-container": "#fdfcff",
+                        "inverse-surface": "#213145",
+                        "primary": "#006b2c",
+                        "on-surface-variant": "#3e4a3d",
+                        "on-primary-fixed-variant": "#005320",
+                        "inverse-on-surface": "#eaf1ff",
+                        "surface-variant": "#d3e4fe",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-primary": "#62df7d",
+                        "on-background": "#0b1c30",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error-container": "#93000a",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-container-high": "#dce9ff",
+                        "surface-main": "#FFFFFF",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "on-primary-container": "#f7fff2",
+                        "tertiary-container": "#67758c",
+                        "surface": "#f8f9ff",
+                        "primary-fixed": "#7ffc97",
+                        "error": "#ba1a1a",
+                        "surface-tint": "#006e2d",
+                        "on-secondary-fixed-variant": "#3f465c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter-mobile": "16px",
+                        "container-max": "1280px",
+                        "gutter-desktop": "24px",
+                        "base": "4px",
+                        "margin-mobile": "20px",
+                        "margin-desktop": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Space Grotesk"],
+                        "headline-xl": ["Space Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Space Grotesk"],
+                        "label-md": ["JetBrains Mono"],
+                        "label-sm": ["JetBrains Mono"],
+                        "headline-lg": ["Space Grotesk"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "600"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-surface-subtle font-body-md text-on-surface overflow-hidden">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-midnight-void dark:bg-midnight-void border-r border-outline-variant flex flex-col py-6 z-50">
+<div class="px-6 mb-10">
+<span class="text-headline-md font-headline-md font-bold text-primary-fixed">Content OS</span>
+<p class="text-label-sm text-primary-fixed-dim opacity-70">AI Educator Pro</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<!-- Capture Tab: Active for Interview Engine -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg border-l-4 border-primary transition-transform scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">input</span>
+<span class="font-label-md text-label-md">Capture</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-label-md text-label-md">Chat</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+<span class="font-label-md text-label-md">Output</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-label-md text-label-md">Events</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-label-md text-label-md">Bank</span>
+</a>
+</nav>
+<div class="px-4 mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant hover:bg-tertiary-container hover:text-on-tertiary-container transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<div class="mt-6 flex items-center gap-3 px-4 py-4 border-t border-outline-variant/30">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="Content OS User Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuBCGmCueJnrQjbdfXgye5sgUoIF8q3oMEpMTLNfd7UEP2o_5ehxnfPkqtUuFqgUrcOZyRMx-wWG9NF3kVoOQLy-1AHOC7VgQtb7F-iLHVv6-N_FiVPVfqjxGfpkPF7SyTVMOG_gyvM2BtUCN9VGljEcDK-ndumDwJ3uniUYJG_-mRzPONI5gq3b0lHaB0viOXoG9AV8uo03kougq21mQP9FzeozHx9Gcq2metsNbRYWzaocGC917WW5vJTcUzvQsGahbBmmeFiq2T"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-bold text-white">Dr. Arinze</span>
+<span class="text-[10px] text-surface-variant uppercase tracking-wider">Pro Tier</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 h-screen flex flex-col relative">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-main dark:bg-surface-main border-b border-border-subtle flex justify-between items-center px-gutter-desktop z-40">
+<div class="flex items-center gap-4">
+<div class="bg-surface-subtle border border-border-subtle rounded px-3 py-1.5 flex items-center gap-2 w-64">
+<span class="material-symbols-outlined text-secondary text-[20px]">search</span>
+<input class="bg-transparent border-none text-body-sm focus:ring-0 p-0 w-full placeholder-secondary" placeholder="Search capture history..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-success-vibrant/10 text-primary rounded-full">
+<div class="w-2 h-2 rounded-full bg-success-vibrant animate-pulse"></div>
+<span class="text-label-sm font-bold">Engine Active</span>
+</div>
+<div class="flex items-center gap-4 text-secondary">
+<span class="material-symbols-outlined cursor-pointer active:opacity-80 hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer active:opacity-80 hover:text-primary transition-colors">help_outline</span>
+<div class="h-8 w-[1px] bg-border-subtle mx-2"></div>
+<div class="w-8 h-8 rounded-lg bg-surface-subtle border border-border-subtle flex items-center justify-center cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Chat Workspace -->
+<div class="flex-1 mt-16 overflow-y-auto custom-scrollbar flex flex-col items-center py-12 px- gutter-desktop bg-surface-subtle">
+<div class="w-full max-w-4xl space-y-12 pb-32">
+<!-- AI Question -->
+<div class="flex flex-col items-start max-w-2xl group">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 bg-midnight-void text-primary-fixed flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<span class="font-label-md text-label-md text-secondary">CONTENT OS ENGINE</span>
+</div>
+<div class="bg-surface-main border border-midnight-void p-8 rounded-xl relative">
+<p class="text-headline-md font-headline-md leading-relaxed text-on-surface">
+                            Based on your previous module on "Neural Networks in Education," how would you simplify the concept of backpropagation for a high school audience using a sports analogy?
+                        </p>
+<!-- Visual indicator for voice synthesis -->
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-primary rounded-full ring-4 ring-surface-subtle"></div>
+</div>
+</div>
+<!-- User Response -->
+<div class="flex flex-col items-end self-end max-w-2xl">
+<div class="flex items-center gap-3 mb-4">
+<span class="font-label-md text-label-md text-secondary">DR. ARINZE</span>
+<div class="w-10 h-10 bg-primary-container text-on-primary-container flex items-center justify-center rounded-lg overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD39Nu_1yXhJzBg3qAIhUS_ANpTG1VPp10DC9OvuTJ6nWUqwjiMUNWab7eGGKn7aPSxxM0poFyxFsDnCGpiW-PlcwmwpTPOSE4nOaOfHraoEsiQKmES528gTWcHp3MrSMEYyO4LW5bgPzmGxXdvmFwq1ZDTk7yaR8EOD5Z41K_sJmeXE7yOCdo8oqGGuZ0FPTFp5Hlb09RB2tfh6ZJmdBOYF2CYmIVyrNh-RLEkmH2H0WHZKDfKGLw1HS0V5ovWoJD0c6FpFMhS0-Mq"/>
+</div>
+</div>
+<div class="bg-surface-main border border-midnight-void p-8 rounded-xl shadow-sm text-right">
+<p class="text-body-lg font-body-lg text-on-surface leading-relaxed">
+                            Think of it like a basketball team reviewing game film. Every missed shot is an 'error'. Backpropagation is the coach watching the film in reverse to identify which specific movement—maybe a foot placement or a wrist flick—caused the miss, then telling the player exactly how to adjust for the next play.
+                        </p>
+</div>
+<div class="mt-4 flex gap-4">
+<button class="text-label-sm font-label-sm text-secondary hover:text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">edit</span> Edit Response
+                        </button>
+</div>
+</div>
+<!-- AI Next Question (Current) -->
+<div class="flex flex-col items-start max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 bg-midnight-void text-primary-fixed flex items-center justify-center rounded-lg">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<span class="font-label-md text-label-md text-secondary">ACTIVE INTERVIEW</span>
+</div>
+<div class="bg-surface-main border border-midnight-void p-8 rounded-xl">
+<p class="text-headline-md font-headline-md leading-relaxed text-on-surface">
+                            That's a powerful analogy. Let's dig deeper into the 'game film' part. What specific 'movements' or data points should we prioritize for the visual aid in this lesson?
+                        </p>
+</div>
+</div>
+<!-- Visual Accent: Information Density -->
+<div class="grid grid-cols-3 gap-6">
+<div class="bg-surface-main border border-border-subtle p-6 rounded-lg group hover:border-primary transition-colors">
+<span class="font-label-sm text-label-sm text-secondary uppercase mb-2 block">Context Analysis</span>
+<div class="h-2 w-full bg-surface-subtle rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-3/4"></div>
+</div>
+<p class="text-body-sm font-body-sm mt-3 text-secondary">Curriculum Alignment: 88%</p>
+</div>
+<div class="bg-surface-main border border-border-subtle p-6 rounded-lg group hover:border-primary transition-colors">
+<span class="font-label-sm text-label-sm text-secondary uppercase mb-2 block">Tone Check</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">sentiment_satisfied</span>
+<span class="text-body-sm font-body-sm text-on-surface">Encouraging &amp; Expert</span>
+</div>
+</div>
+<div class="bg-surface-main border border-border-subtle p-6 rounded-lg group hover:border-primary transition-colors">
+<span class="font-label-sm text-label-sm text-secondary uppercase mb-2 block">Extracted Keywords</span>
+<div class="flex flex-wrap gap-2">
+<span class="px-2 py-0.5 bg-surface-subtle border border-border-subtle text-[10px] font-label-sm rounded uppercase">Visual Aid</span>
+<span class="px-2 py-0.5 bg-surface-subtle border border-border-subtle text-[10px] font-label-sm rounded uppercase">Analogy</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Dock (Sticky Bottom) -->
+<div class="absolute bottom-0 left-0 right-0 p-gutter-desktop pointer-events-none">
+<div class="max-w-4xl mx-auto glass-panel border border-midnight-void rounded-2xl p-6 pointer-events-auto flex items-center gap-6">
+<button class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center relative active:scale-95 transition-transform group" id="voiceBtn">
+<span class="material-symbols-outlined text-[32px]" style="font-variation-settings: 'FILL' 1;">mic</span>
+<div class="absolute inset-0 rounded-full border-4 border-primary/30 animate-ping group-hover:block hidden"></div>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-surface-subtle border border-border-subtle focus:border-primary focus:ring-0 rounded-xl px-6 py-4 text-body-md pr-24 transition-all" placeholder="Type your response or speak..." type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-3">
+<button class="text-label-sm font-label-sm text-secondary hover:text-primary transition-colors">SKIP</button>
+<span class="w-[1px] h-4 bg-border-subtle"></span>
+<button class="material-symbols-outlined text-primary hover:scale-110 transition-transform">send</button>
+</div>
+</div>
+<div class="flex flex-col items-center gap-1 min-w-[80px]">
+<span class="text-[10px] font-label-sm text-secondary uppercase tracking-tighter">Progress</span>
+<span class="text-headline-md font-headline-md leading-none">08<span class="text-body-sm text-secondary">/12</span></span>
+</div>
+</div>
+</div>
+<!-- Float Accent Card -->
+<div class="fixed right-8 top-24 w-64 bg-surface-main border border-border-subtle rounded-xl shadow-sm p-6 space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-label-md">Topic Explorer</h3>
+<span class="material-symbols-outlined text-secondary text-sm">explore</span>
+</div>
+<div class="relative w-full aspect-video rounded-lg overflow-hidden bg-surface-subtle border border-border-subtle">
+<img class="w-full h-full object-cover opacity-80" data-alt="A macro digital visualization of a neural network with glowing green nodes and interconnected white fibrous strands against a deep navy blue background. The lighting is focused and dramatic, highlighting the complexity of the synthetic synapse system in a clean, professional tech editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrPYjvUOEzgFfGkETk2O65qZqsE5FId7IDS9fW4Qaq9xBeKtdcbvJEer7apIAIITPsJh5CmRYUR-F83zEfK3N-NV4kiEao5SMXqy-u19qbal0Tx62_kxWS4FofSQsKLF8uN3PqdAAVv7L2otbRc3Kan1zuwtEM19EdmjcO-MOKMmqEOrVDv6HuhftPGqkK2C7LczyE95szEWQsaWylbDkVM-LwzkIYZ2GNjuxhlVUGsITb79I1m91Ser-mCwdQuv241KRLpZtn2d8j"/>
+</div>
+<p class="text-body-sm text-secondary">Currently capturing insights for your upcoming <span class="text-on-surface font-bold">Deep Learning</span> module.</p>
+<button class="w-full py-2 bg-midnight-void text-white font-label-sm rounded-lg hover:bg-primary transition-colors">View All Assets</button>
+</div>
+</main>
+<script>
+        // Micro-interaction for Voice Button
+        const voiceBtn = document.getElementById('voiceBtn');
+        let isRecording = false;
+
+        voiceBtn.addEventListener('click', () => {
+            isRecording = !isRecording;
+            if(isRecording) {
+                voiceBtn.classList.add('bg-error');
+                voiceBtn.classList.remove('bg-primary');
+                voiceBtn.querySelector('span').innerText = 'graphic_eq';
+                // Trigger a ripple or pulse effect
+                voiceBtn.innerHTML += '<div class="absolute inset-0 rounded-full border-4 border-error animate-ping"></div>';
+            } else {
+                voiceBtn.classList.remove('bg-error');
+                voiceBtn.classList.add('bg-primary');
+                voiceBtn.querySelector('span').innerText = 'mic';
+                const ripples = voiceBtn.querySelectorAll('.animate-ping');
+                ripples.forEach(r => r.remove());
+            }
+        });
+
+        // Simple smooth scroll to bottom on load
+        window.addEventListener('load', () => {
+            const container = document.querySelector('.overflow-y-auto');
+            container.scrollTop = container.scrollHeight;
+        });
+    </script>
+</body></html>
