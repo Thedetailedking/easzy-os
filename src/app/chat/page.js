@@ -10,12 +10,17 @@ function ChatContent() {
   const captureId = searchParams.get("capture_id");
   const router = useRouter();
 
+  const [activeCaptureId, setActiveCaptureId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState(null);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollContainerRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setActiveCaptureId(captureId);
+  }, [captureId]);
 
   // Reset textarea height when input is cleared
   useEffect(() => {
@@ -38,7 +43,7 @@ function ChatContent() {
   }, [messages]);
 
   useEffect(() => {
-    if (!captureId) {
+    if (!activeCaptureId) {
       setMessages([{ role: "assistant", content: "Hi! What would you like to work on today? You can share a topic, and I'll help you develop it into content." }]);
       return;
     }
@@ -70,10 +75,14 @@ Voice Dynamics (Scale 0-100): Tone: ${profile.tone}, Rawness: ${profile.rawness}
 TRAINING DATA:
 ${trainingStr || "No training data provided."}
 
-YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewing the user. Ask ONE short, clarifying question at a time to help them develop their idea so it perfectly matches their Target Audience and Positioning Statement above.`;
+YOUR INSTRUCTIONS:
+- You are helping the user develop their content.
+- Be highly flexible! Acknowledge the user's intent. If the user is just "brain dumping" or wants a simple post/short writeup without rigid CTA formatting, DO NOT badger them with persistent clarifying questions about target audience, CTA, or niche. Instead, offer a quick outline or say "Got it! Feel free to hit the 'I'm Done! Generate Content' button below to compile the post, or let me know if you want to tweak anything."
+- If the user explicitly asks you to write a post or seems ready, suggest a quick layout or draft immediately instead of asking more questions.
+- Otherwise, ask ONE short, helpful follow-up or clarifying question to refine the idea. Keep it natural, warm, and highly conversational.`;
         }
-        const { data: captureData } = await supabase.from('captures').select('*').eq('id', captureId).single();
-        const { data: sessions } = await supabase.from('interview_sessions').select('*').eq('capture_id', captureId).order('created_at', { ascending: false }).limit(1);
+        const { data: captureData } = await supabase.from('captures').select('*').eq('id', activeCaptureId).single();
+        const { data: sessions } = await supabase.from('interview_sessions').select('*').eq('capture_id', activeCaptureId).order('created_at', { ascending: false }).limit(1);
         const sessionData = sessions?.[0];
         
         if (sessionData && sessionData.messages && sessionData.messages.length > 0) {
@@ -101,7 +110,7 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
           setMessages(initialMessages);
           
           // Save session
-          const { data: newSession } = await supabase.from('interview_sessions').insert([{ capture_id: captureId, messages: initialMessages }]).select().single();
+          const { data: newSession } = await supabase.from('interview_sessions').insert([{ capture_id: activeCaptureId, messages: initialMessages }]).select().single();
           if (newSession) setSessionId(newSession.id);
         }
       } catch (error) {
@@ -112,7 +121,7 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
     };
     
     loadSession();
-  }, [captureId]);
+  }, [activeCaptureId]);
 
   const handleSend = async (textToSend = inputText) => {
     if (!textToSend.trim() || isLoading) return;
@@ -124,6 +133,37 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
     setIsLoading(true);
 
     try {
+      let currentCaptureId = activeCaptureId;
+      let currentSessionId = sessionId;
+
+      // Direct chat auto-registration flow
+      if (!currentCaptureId) {
+        // Create a new capture for this direct chat session
+        const { data: newCap, error: capErr } = await supabase
+          .from('captures')
+          .insert([{ type: 'Text Idea', transcript: textToSend }])
+          .select()
+          .single();
+        if (capErr) throw capErr;
+        
+        currentCaptureId = newCap.id;
+        setActiveCaptureId(newCap.id);
+        
+        // Create a new interview session
+        const { data: newSession, error: sessErr } = await supabase
+          .from('interview_sessions')
+          .insert([{ capture_id: newCap.id, messages: [userMsg] }])
+          .select()
+          .single();
+        if (sessErr) throw sessErr;
+        
+        currentSessionId = newSession.id;
+        setSessionId(newSession.id);
+        
+        // Silently update the URL so if the user refreshes or clicks "I'm Done", the ID is set
+        router.replace(`/chat?capture_id=${newCap.id}`, { scroll: false });
+      }
+
       // Fetch Active Persona Profile
       let personaContext = "You are an expert content interviewer.";
       let llmProvider = "openrouter";
@@ -148,13 +188,18 @@ Voice Dynamics (Scale 0-100): Tone: ${profile.tone}, Rawness: ${profile.rawness}
 TRAINING DATA:
 ${trainingStr || "No training data provided."}
 
-YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewing the user. Ask ONE short, clarifying question at a time to help them develop their idea so it perfectly matches their Target Audience and Positioning Statement above.`;
+YOUR INSTRUCTIONS:
+- You are helping the user develop their content.
+- Be highly flexible! Acknowledge the user's intent. If the user is just "brain dumping" or wants a simple post/short writeup without rigid CTA formatting, DO NOT badger them with persistent clarifying questions about target audience, CTA, or niche. Instead, offer a quick outline or say "Got it! Feel free to hit the 'I'm Done! Generate Content' button below to compile the post, or let me know if you want to tweak anything."
+- If the user explicitly asks you to write a post or seems ready, suggest a quick layout or draft immediately instead of asking more questions.
+- Otherwise, ask ONE short, helpful follow-up or clarifying question to refine the idea. Keep it natural, warm, and highly conversational.`;
       }
+      
       // Save user message immediately so it's not lost if they navigate away
-      if (sessionId) {
-        await supabase.from('interview_sessions').update({ messages: newMessages }).eq('id', sessionId);
+      if (currentSessionId) {
+        await supabase.from('interview_sessions').update({ messages: newMessages }).eq('id', currentSessionId);
       } else {
-        await supabase.from('interview_sessions').update({ messages: newMessages }).eq('capture_id', captureId);
+        await supabase.from('interview_sessions').update({ messages: newMessages }).eq('capture_id', currentCaptureId);
       }
 
       // Build conversation history for context
@@ -178,10 +223,10 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
       setMessages(updatedMessages);
 
       // Update session in DB with AI response
-      if (sessionId) {
-        await supabase.from('interview_sessions').update({ messages: updatedMessages }).eq('id', sessionId);
+      if (currentSessionId) {
+        await supabase.from('interview_sessions').update({ messages: updatedMessages }).eq('id', currentSessionId);
       } else {
-        await supabase.from('interview_sessions').update({ messages: updatedMessages }).eq('capture_id', captureId);
+        await supabase.from('interview_sessions').update({ messages: updatedMessages }).eq('capture_id', currentCaptureId);
       }
       
     } catch (error) {
@@ -259,7 +304,7 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
   };
 
   const jumpToOutput = () => {
-    router.push(`/output?capture_id=${captureId}`);
+    router.push(`/output?capture_id=${activeCaptureId}`);
   };
 
   return (
@@ -355,6 +400,10 @@ YOUR INSTRUCTIONS: You are not writing the post yet! You are actively interviewi
               }}
               onKeyDown={e => {
                 if (e.key === 'Enter' && !e.shiftKey) {
+                  // If on mobile viewports (screen width < 768px), allow Enter key to make a newline instead of sending
+                  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+                    return; // Let default behavior insert newline
+                  }
                   e.preventDefault();
                   handleSend();
                 }
@@ -399,6 +448,34 @@ export default function ChatPage() {
     loadHistory();
   }, []);
 
+  const handleDeleteCapture = async (e, id) => {
+    e.stopPropagation(); // Prevent card onClick trigger
+    if (typeof window === 'undefined') return;
+
+    if (!confirm("Are you sure you want to delete this session? This action cannot be undone.")) {
+      return;
+    }
+
+    try {
+      const { error } = await supabase.from('captures').delete().eq('id', id);
+      if (error) throw error;
+      
+      toast.success("Session deleted successfully.");
+      
+      // Update local state list
+      setHistoryItems(prev => prev.filter(item => item.id !== id));
+      
+      // If we deleted the active capture session, redirect to fresh /chat
+      const activeId = new URLSearchParams(window.location.search).get("capture_id");
+      if (activeId === id) {
+        router.push('/chat');
+      }
+    } catch (err) {
+      console.error("Delete capture error:", err);
+      toast.error("Failed to delete session.");
+    }
+  };
+
   return (
     <main className="md:ml-64 h-[100dvh] md:h-screen flex flex-col md:flex-row relative pt-16 bg-surface-subtle overflow-hidden">
       
@@ -414,7 +491,7 @@ export default function ChatPage() {
       {/* History Sidebar */}
       <div className={`${showHistory ? 'translate-x-0' : '-translate-x-full md:translate-x-0'} fixed md:static top-[120px] md:top-0 left-0 bottom-16 md:bottom-0 w-full md:w-80 bg-surface-main md:border-r border-border-subtle flex flex-col z-30 transition-transform duration-300 shadow-xl md:shadow-none`}>
          <div className="p-4 border-b border-border-subtle hidden md:block">
-           <h2 className="font-headline-sm text-on-surface">Recent Sessions</h2>
+            <h2 className="font-headline-sm text-on-surface">Recent Sessions</h2>
          </div>
          <div className="flex-1 overflow-y-auto custom-scrollbar p-3 space-y-2">
             {historyItems.map(item => (
@@ -424,11 +501,20 @@ export default function ChatPage() {
                    setShowHistory(false);
                    router.push(`/chat?capture_id=${item.id}`);
                  }}
-                 className="p-4 bg-surface-subtle hover:bg-surface-dim rounded-xl cursor-pointer border border-border-subtle hover:border-primary/50 transition-all flex flex-col gap-2 group"
+                 className="p-4 bg-surface-subtle hover:bg-surface-dim rounded-xl cursor-pointer border border-border-subtle hover:border-primary/50 transition-all flex flex-col gap-2 group relative"
                >
-                 <span className={`text-[10px] font-jetbrains-mono font-bold px-2 py-0.5 rounded w-fit ${item.type === 'Voice Note' ? 'bg-blue-50 text-blue-500' : 'bg-orange-50 text-orange-500'}`}>
-                   {item.type.toUpperCase()}
-                 </span>
+                 <div className="flex justify-between items-center w-full">
+                   <span className={`text-[10px] font-jetbrains-mono font-bold px-2 py-0.5 rounded w-fit ${item.type === 'Voice Note' ? 'bg-blue-50 text-blue-500' : 'bg-orange-50 text-orange-500'}`}>
+                     {item.type.toUpperCase()}
+                   </span>
+                   <button 
+                     onClick={(e) => handleDeleteCapture(e, item.id)}
+                     className="text-secondary hover:text-error opacity-0 group-hover:opacity-100 transition-opacity p-1 flex rounded hover:bg-surface-main"
+                     title="Delete Conversation"
+                   >
+                     <span className="material-symbols-outlined text-[16px]">delete</span>
+                   </button>
+                 </div>
                  <p className="text-body-sm font-medium text-on-surface line-clamp-2 leading-relaxed group-hover:text-primary transition-colors">{item.transcript || "Empty"}</p>
                  <p className="text-[10px] text-secondary font-jetbrains-mono">{new Date(item.created_at).toLocaleDateString()}</p>
                </div>

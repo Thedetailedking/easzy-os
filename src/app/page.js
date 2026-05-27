@@ -30,16 +30,22 @@ export default function Dashboard() {
   }, []);
 
   // Calculate Content Health (Synchronized with Calendar Page!)
-  const last7Days = Array.from({length: 7}).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
+  const today = new Date();
+  const currentDayOfWeek = today.getDay();
+  const distanceToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
+  const startOfWeek = new Date(today);
+  startOfWeek.setDate(today.getDate() - distanceToMonday);
+
+  const currentWeekDays = Array.from({length: 7}).map((_, i) => {
+    const d = new Date(startOfWeek);
+    d.setDate(startOfWeek.getDate() + i);
     return d.toDateString();
   });
   
   const scheduledCount = allDrafts.filter(d => d.scheduled_date).length;
   const publishedCount = allDrafts.filter(d => d.scheduled_date && d.status === 'Published').length;
 
-  const consistencyDays = last7Days.filter(day => {
+  const consistencyDays = currentWeekDays.filter(day => {
     return allDrafts.some(d => {
       if (!d.scheduled_date) return false;
       return new Date(d.scheduled_date).toDateString() === day;
@@ -53,12 +59,6 @@ export default function Dashboard() {
   const healthScore = scheduledCount > 0 ? Math.round((publishedCount / scheduledCount) * 100) : 0;
 
   // Calculate Week at a Glance
-  const today = new Date();
-  const currentDayOfWeek = today.getDay();
-  const distanceToMonday = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1;
-  const startOfWeek = new Date(today);
-  startOfWeek.setDate(today.getDate() - distanceToMonday);
-
   const weekDays = Array.from({ length: 7 }).map((_, i) => {
     const d = new Date(startOfWeek);
     d.setDate(startOfWeek.getDate() + i);

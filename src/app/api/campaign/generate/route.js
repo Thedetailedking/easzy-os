@@ -13,6 +13,7 @@ const ALLOWED_COMMAND_TYPES = [
   "seven_day_plan",
   "offer_calibrator",
   "style_calibrator",
+  "launch_sequence",
   "",
 ];
 

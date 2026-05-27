@@ -18,6 +18,10 @@ export default function CapturePage() {
   const [textIdea, setTextIdea] = useState("");
   const [isSavingText, setIsSavingText] = useState(false);
 
+  // URL Parser State
+  const [urlInput, setUrlInput] = useState("");
+  const [isParsingUrl, setIsParsingUrl] = useState(false);
+
   // Recent Captures State
   const [recentCaptures, setRecentCaptures] = useState([]);
 
@@ -119,6 +123,57 @@ export default function CapturePage() {
       console.error(error);
       toast.error("Error saving text idea.");
       setIsSavingText(false);
+    }
+  };
+
+  const handleUrlParse = async () => {
+    if (!urlInput.trim()) {
+      toast.error("Please enter a URL first.");
+      return;
+    }
+
+    setIsParsingUrl(true);
+    const toastId = toast.loading("Scraping webpage content...");
+
+    try {
+      const response = await fetch("/api/scrape", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: urlInput.trim() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.error) {
+        throw new Error(data.error || "Webpage scraping failed");
+      }
+
+      const scrapedText = data.content;
+      if (!scrapedText || scrapedText.trim().length === 0) {
+        throw new Error("No readable text content could be extracted from this URL.");
+      }
+
+      // Combine URL source and scraped content for LLM context
+      const formattedTranscript = `Source Link: ${urlInput.trim()}\n\nContent:\n${scrapedText}`;
+
+      const { data: captureData, error: dbError } = await supabase
+        .from("captures")
+        .insert([{ type: "URL Link", transcript: formattedTranscript }])
+        .select()
+        .single();
+
+      if (dbError) throw dbError;
+
+      toast.success("Webpage scraped successfully! Training engine...", { id: toastId });
+      setUrlInput(""); // Clear field
+      router.push(`/chat?capture_id=${captureData.id}`);
+    } catch (err) {
+      console.error("Scraping error:", err);
+      toast.error(err.message || "Failed to parse content from URL.", { id: toastId });
+    } finally {
+      setIsParsingUrl(false);
     }
   };
 
@@ -251,13 +306,24 @@ export default function CapturePage() {
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary">link</span>
                 <input
                   type="url"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  disabled={isParsingUrl}
                   className="w-full bg-surface-subtle border border-border-subtle rounded-lg pl-10 pr-4 py-4 text-body-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-mono"
                   placeholder="https://example.com"
                 />
               </div>
             </div>
-            <button className="mt-auto w-full py-3 border border-midnight-void text-midnight-void font-label-md hover:bg-midnight-void hover:text-white transition-all rounded-lg flex items-center justify-center gap-2 active:scale-95">
-              Parse Content
+            <button 
+              onClick={handleUrlParse}
+              disabled={isParsingUrl || !urlInput.trim()}
+              className="mt-auto w-full py-3 border border-midnight-void text-midnight-void font-label-md hover:bg-midnight-void hover:text-white transition-all rounded-lg flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isParsingUrl ? (
+                <><span className="material-symbols-outlined animate-spin text-[20px]">sync</span>Parsing Webpage...</>
+              ) : (
+                "Parse Content"
+              )}
             </button>
           </section>
 
