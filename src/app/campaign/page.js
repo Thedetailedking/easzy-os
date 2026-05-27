@@ -1220,39 +1220,49 @@ CREATE POLICY "Allow all operations for anon" ON public.marketing_campaigns FOR 
           {/* Quick-action Strategy Chips (Design System Tags) */}
           <div className="p-2 border-b border-border-subtle bg-surface-subtle/50 flex gap-2 overflow-x-auto shrink-0 custom-scrollbar whitespace-nowrap">
             <button 
-              onClick={() => handleSendChat("Generate $100M scroll-stopping curiosity hooks for my audience based on my settings.", "hormozi_hook")}
-              disabled={isLoadingChat}
-              className="bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border border-border-subtle rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 disabled:opacity-50"
+              onClick={() => {
+                setActiveTab("sequence");
+                setChatInput("Let's brainstorm ways to optimize my organic Launch Sequence waitlist announcements.");
+              }}
+              className={`border rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 ${activeTab === "sequence" ? "bg-primary text-on-primary border-primary" : "bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border-border-subtle"}`}
             >
-              <span className="material-symbols-outlined text-[14px] text-primary">lightbulb</span> Hook Architect
+              <span className={`material-symbols-outlined text-[14px] ${activeTab === "sequence" ? "text-on-primary" : "text-primary"}`}>rocket_launch</span> Launch Planner
             </button>
             <button 
-              onClick={() => handleSendChat("Draft conversational Warm Outreach Direct Message (DM) scripts focused on offering a free gift lead magnet.", "warm_outreach")}
-              disabled={isLoadingChat}
-              className="bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border border-border-subtle rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 disabled:opacity-50"
+              onClick={() => {
+                setActiveTab("outreach");
+                setChatInput("Let's draft some conversational direct message scripts to engage hand-raisers organically.");
+              }}
+              className={`border rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 ${activeTab === "outreach" ? "bg-primary text-on-primary border-primary" : "bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border-border-subtle"}`}
             >
-              <span className="material-symbols-outlined text-[14px] text-primary">forum</span> DM Outreach
+              <span className={`material-symbols-outlined text-[14px] ${activeTab === "outreach" ? "text-on-primary" : "text-primary"}`}>forum</span> DM Outreach
             </button>
             <button 
-              onClick={() => handleSendChat("Outline a Grand Slam Lead Magnet with extreme value that solves a target problem immediately.", "lead_magnet")}
-              disabled={isLoadingChat}
-              className="bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border border-border-subtle rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 disabled:opacity-50"
+              onClick={() => {
+                setActiveTab("leadgen");
+                setChatInput("I want to refine my Lead Magnet design. Let's outline a high-value checklist or cheat sheet.");
+              }}
+              className={`border rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 ${activeTab === "leadgen" ? "bg-primary text-on-primary border-primary" : "bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border-border-subtle"}`}
             >
-              <span className="material-symbols-outlined text-[14px] text-primary">card_giftcard</span> Lead Magnet
+              <span className={`material-symbols-outlined text-[14px] ${activeTab === "leadgen" ? "text-on-primary" : "text-primary"}`}>card_giftcard</span> Lead Magnet
             </button>
             <button 
-              onClick={() => handleSendChat("Build a structured organic 7-Day Posting Plan outline containing hooks and CTAs.", "seven_day_plan")}
-              disabled={isLoadingChat}
-              className="bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border border-border-subtle rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 disabled:opacity-50"
+              onClick={() => {
+                setActiveTab("posting");
+                setChatInput("Let's map out a 7-day posting calendar with value-led hooks and clear CTAs.");
+              }}
+              className={`border rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 ${activeTab === "posting" ? "bg-primary text-on-primary border-primary" : "bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border-border-subtle"}`}
             >
-              <span className="material-symbols-outlined text-[14px] text-primary">calendar_today</span> Posting Plan
+              <span className={`material-symbols-outlined text-[14px] ${activeTab === "posting" ? "text-on-primary" : "text-primary"}`}>calendar_today</span> Posting Plan
             </button>
             <button 
-              onClick={() => handleSendChat("Structure an irresistible $100M Grand Slam Offer framework based on my solution.", "offer_calibrator")}
-              disabled={isLoadingChat}
-              className="bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border border-border-subtle rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 disabled:opacity-50"
+              onClick={() => {
+                setActiveTab("offer");
+                setChatInput("Can we calibrate my $100M Grand Slam Offer details to reduce friction for my audience?");
+              }}
+              className={`border rounded-full px-3.5 py-1.5 text-[11px] font-jetbrains-mono transition-all duration-200 flex items-center gap-1.5 shrink-0 ${activeTab === "offer" ? "bg-primary text-on-primary border-primary" : "bg-surface-subtle hover:bg-surface-dim hover:text-on-surface text-secondary border-border-subtle"}`}
             >
-              <span className="material-symbols-outlined text-[14px] text-primary">payments</span> Offer Calibrator
+              <span className={`material-symbols-outlined text-[14px] ${activeTab === "offer" ? "text-on-primary" : "text-primary"}`}>payments</span> Offer Calibrator
             </button>
           </div>
 
